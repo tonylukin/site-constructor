@@ -35,6 +35,9 @@ $config = [
         ],
     ],
     */
+    'container' => [
+        'singletons' => require __DIR__ . '/di.php',
+    ],
 ];
 
 if (YII_ENV_DEV) {

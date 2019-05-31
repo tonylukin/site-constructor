@@ -38,5 +38,8 @@ return [
             */
         ],
     ],
+    'container' => [
+        'singletons' => require __DIR__ . '/di.php',
+    ],
     'params' => $params,
 ];
