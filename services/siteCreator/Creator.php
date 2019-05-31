@@ -2,12 +2,14 @@
 
 namespace app\services\siteCreator;
 
+use app\models\Page;
+use app\models\Site;
 use app\services\googleParser\SiteListGetter;
 
 class Creator
 {
     private $queries = [
-        'beautiful buildings'
+        'beautiful-buildings.loc' => 'beautiful buildings',
     ];
 
     /**
@@ -36,14 +38,41 @@ class Creator
 
     public function create(): void
     {
-        foreach ($this->queries as $query) {
+        foreach ($this->queries as $domain => $query) {
             $urlList = $this->siteListGetter->getSearchList($query);
-            foreach ($urlList as $url) {
-                $content = $this->parser->parseSiteContent($url);
-                if ($content === null) {
-                    continue;
+            $transaction = \Yii::$app->db->beginTransaction();
+
+            try {
+                $site = new Site();
+                $site->search_word = $query;
+                $site->domain = $domain;
+                if (!$site->save()) {
+                    throw new \Exception('Error on saving site: ' . \implode('; ', $site->getErrorSummary(true)));
                 }
-                // todo create db records for content parsed
+
+                foreach ($urlList as $url) {
+                    $content = $this->parser->parseSiteContent($url);
+                    if ($content === null) {
+                        continue;
+                    }
+                    $page = new Page();
+                    $page->title = $this->parser->getTitle();
+                    $page->keywords = $this->parser->getKeywords();
+                    $page->description = $this->parser->getDescription();
+                    $page->site_id = $site->id;
+                    $page->content = $content;
+                    if (!$page->save()) {
+                        \Yii::error(\implode('; ', $page->getErrorSummary(true)), 'parser');
+                    }
+                    break; // todo delete
+                }
+                $transaction->commit();
+
+            } catch (\Throwable $e) {
+                \Yii::error($e->getMessage(), 'parser');
+                if ($transaction->isActive) {
+                    $transaction->rollBack();
+                }
             }
         }
     }

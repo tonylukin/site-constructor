@@ -8,6 +8,7 @@ class ParserTest extends \Codeception\Test\Unit
 {
     public function testParseSiteContent(): void
     {
+        /** @var Parser $parser */
         $parser = \Yii::$container->get(Parser::class);
         $content = $parser->parseSiteContent('https://www.creativebloq.com/architecture/famous-buildings-around-world-10121105');
         $this->assertNotNull($content);

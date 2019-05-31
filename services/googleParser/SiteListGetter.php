@@ -6,7 +6,12 @@ use GuzzleHttp\Client;
 
 class SiteListGetter
 {
-    private const GOOGLE_URL = 'https://www.google.co.uk/search?q={query}&num=100';
+    private const GOOGLE_URL = 'https://www.google.co.uk/search?q={query}&num={number}';
+
+    /**
+     * @var int
+     */
+    private $searchResultNumber = 100;
 
     /**
      * @var Client
@@ -31,7 +36,7 @@ class SiteListGetter
      */
     public function getSearchList(string $queryWords): array
     {
-        $googleUrl = \str_replace('{query}', \urlencode($queryWords), self::GOOGLE_URL);
+        $googleUrl = \str_replace(['{query}', '{number}'], [\urlencode($queryWords), $this->searchResultNumber], self::GOOGLE_URL);
         try {
             $response = $this->client->request('GET', $googleUrl);
         } catch (\Throwable $e) {
@@ -63,5 +68,15 @@ class SiteListGetter
 
         $siteUrlsList = \array_unique($siteUrlsList);
         return $siteUrlsList;
+    }
+
+    /**
+     * @param int $searchResultNumber
+     * @return SiteListGetter
+     */
+    public function setSearchResultNumber(int $searchResultNumber): SiteListGetter
+    {
+        $this->searchResultNumber = $searchResultNumber;
+        return $this;
     }
 }
