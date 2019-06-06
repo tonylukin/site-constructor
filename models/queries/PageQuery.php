@@ -12,6 +12,17 @@ use yii\db\ActiveQuery;
  */
 class PageQuery extends ActiveQuery
 {
+    /**
+     * @param string $sourceUrl
+     * @return PageQuery
+     */
+    public function bySourceUrl(string $sourceUrl): self
+    {
+        return $this->andWhere([
+            'source_url' => $sourceUrl,
+        ]);
+    }
+
     /*public function active()
     {
         return $this->andWhere('[[status]]=1');

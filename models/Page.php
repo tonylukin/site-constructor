@@ -14,6 +14,8 @@ use yii\db\ActiveRecord;
  * @property string $keywords
  * @property string $description
  * @property string $content
+ * @property string $url
+ * @property string $source_url
  * @property int $site_id
  * @property string $created_at
  *
@@ -35,6 +37,8 @@ class Page extends ActiveRecord
     public function rules()
     {
         return [
+            [['title', 'content', 'url', 'source_url', 'site_id'], 'required'],
+            [['source_url'], 'unique'],
             [['content'], 'string'],
             [['site_id'], 'integer'],
             [['created_at'], 'safe'],

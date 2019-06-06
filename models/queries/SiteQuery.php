@@ -12,6 +12,20 @@ use yii\db\ActiveQuery;
  */
 class SiteQuery extends ActiveQuery
 {
+    /**
+     * @param string $searchWord
+     * @param string $domain
+     * @return SiteQuery
+     */
+    public function byWordOrDomain(string $searchWord, string $domain): self
+    {
+        return $this->andWhere([
+            'OR',
+            ['search_word' => $searchWord],
+            ['domain' => $domain],
+        ]);
+    }
+
     /*public function active()
     {
         return $this->andWhere('[[status]]=1');

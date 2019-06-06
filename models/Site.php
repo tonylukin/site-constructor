@@ -32,6 +32,7 @@ class Site extends ActiveRecord
     public function rules()
     {
         return [
+            [['search_word', 'domain'], 'unique'],
             [['search_word', 'domain'], 'required'],
             [['created_at'], 'safe'],
             [['search_word', 'domain'], 'string', 'max' => 255],
