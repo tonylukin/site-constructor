@@ -4,6 +4,8 @@ use GuzzleHttp\Client;
 use app\services\googleParser\SiteListGetter;
 use app\services\siteCreator\Parser;
 use app\services\siteCreator\Creator;
+use app\services\siteView\PageFinder;
+use app\services\siteView\NavigationLinksGetter;
 
 return [
     Client::class => [
@@ -17,5 +19,11 @@ return [
     ],
     Creator::class => [
         'class' => Creator::class
+    ],
+    PageFinder::class => [
+        'class' => PageFinder::class
+    ],
+    NavigationLinksGetter::class => [
+        'class' => NavigationLinksGetter::class
     ],
 ];

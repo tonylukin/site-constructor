@@ -94,7 +94,6 @@ class Creator
                     } else {
                         \Yii::error(\implode('; ', $page->getErrorSummary(true)), 'parser');
                     }
-//                    break; // todo delete
                 }
                 $transaction->commit();
 

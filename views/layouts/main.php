@@ -19,6 +19,9 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="<?= $this->params['description'] ?? '' ?>">
+    <meta name="keywords" content="<?= $this->params['keywords'] ?? '' ?>">
+
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
@@ -54,13 +57,14 @@ AppAsset::register($this);
                 . '</li>'
             )
         ],
+        'items' => $this->params['navLinks'],
     ]);
     NavBar::end();
     ?>
 
     <div class="container">
         <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+            'links' => $this->params['breadcrumbs'] ?? [],
         ]) ?>
         <?= Alert::widget() ?>
         <?= $content ?>

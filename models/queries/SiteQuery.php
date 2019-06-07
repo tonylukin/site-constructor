@@ -26,10 +26,16 @@ class SiteQuery extends ActiveQuery
         ]);
     }
 
-    /*public function active()
+    /**
+     * @param string $domain
+     * @return SiteQuery
+     */
+    public function byDomain(string $domain): self
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->andWhere([
+            'domain' => $domain
+        ]);
+    }
 
     /**
      * {@inheritdoc}

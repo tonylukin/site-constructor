@@ -23,10 +23,18 @@ class PageQuery extends ActiveQuery
         ]);
     }
 
-    /*public function active()
+    /**
+     * @return PageQuery
+     */
+    public function byHost(): self
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this
+            ->innerJoinWith('site')
+            ->andWhere([
+                'site.domain' => \Yii::$app->request->hostName,
+            ])
+        ;
+    }
 
     /**
      * {@inheritdoc}
