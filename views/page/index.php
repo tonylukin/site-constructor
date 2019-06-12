@@ -17,5 +17,6 @@ foreach ($navigationLinksGetter->get(4) as $item) {
     ];
 }
 $this->params['navLinks'] = $links;
+?>
 
-echo $page->content;
+<?= $page->content ?>

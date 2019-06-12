@@ -1,0 +1,83 @@
+/*=============================================
+			sb-btn
+=============================================*/
+.sb-btn{
+    padding: 12px 30px;
+    text-transform: capitalize;
+    color: #fff;
+    display: inline-block;
+    border: none;
+    font-size: 15px;
+    border-radius: 0;
+    transition: .5s;
+}
+.sb-btn:hover {
+    background: #fff;
+}
+/*=============================================
+			Background Color
+=============================================*/
+.sb-header {
+    background: #ffffff;
+}
+
+/*=============================================
+			Text Color
+=============================================*/
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
+h1, h2, h3, h4, h5, h6,
+.sb-active,
+.sb-footer .ht-copyright a,
+.sb-footer .site-info {
+    color: #000;
+}
+
+.sb-search-section i,
+.sb-wishlist-items i,
+.sb-header-cart-section,
+.sb-homepage-hotdeal,
+.sb-bottom-footer span.product-title,
+.sb-bottom-footer span.woocommerce-Price-amount,
+.site-info,
+.site-info a,
+h2.widget-title,
+.yisb-wcwl-add-button,
+a.add_to_wishlist,
+.yisb-wcwl-wishlistexistsbrowse.show a {
+    color: #fff;
+}
+.site-info a{
+    opacity: .9;
+    letter-spacing: .5px;
+    color: #b1b1b1;
+}
+.site-info .left {
+    float: left;
+}
+.site-info .right {
+    float: right;
+}
+.site-info .right span{
+    color: #fff;
+    text-decoration: underline;
+}
+.sb-logo-color {
+    color: #eb6e1a;
+}
+
+/*=============================================
+			Border-bottom
+=============================================*/
+/*=============================================
+			Border-bosb-side
+=============================================*/
+.sb-btn {
+    border: 1px #fff solid;
+}
+/*=============================================
+			text-transform
+=============================================*/
+.sb-description h1 {
+    text-transform: uppercase;
+    font-weight: 600;
+}
