@@ -6,6 +6,7 @@ use app\services\siteCreator\Parser;
 use app\services\siteCreator\Creator;
 use app\services\siteView\PageFinder;
 use app\services\siteView\NavigationLinksGetter;
+use app\services\siteView\LatestPosts;
 
 return [
     Client::class => [
@@ -26,4 +27,7 @@ return [
     NavigationLinksGetter::class => [
         'class' => NavigationLinksGetter::class
     ],
+    LatestPosts::class => [
+        'class' => LatestPosts::class
+    ]
 ];

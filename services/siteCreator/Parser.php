@@ -67,6 +67,14 @@ class Parser
         $domTitle = $dom->find('head title')[0];
         $this->title = $domTitle->text();
 
+        $img = $domBody->find('img');
+        $img = $img[0] ?? null;
+        if ($img !== null) {
+            /** @var Dom\HtmlNode $img */
+            $imageUrl = $img->getAttribute('src');
+            // todo save to db
+        }
+
         /** @var Dom\HtmlNode $domDescription */
         $domDescription = $dom->find('meta[name="description"]')[0];
         if ($domDescription !== null) {

@@ -6,18 +6,23 @@ use app\models\Page;
 
 class PageFinder
 {
+    private const CACHE_DURATION = 3600 * 24 * 7; // 7 days
+
     /**
      * @param string $url
      * @return Page|null
      */
     public function findByUrl(string $url): ?Page
     {
-        $page = Page::find()->byHost();
+        $query = Page::find()->with('site')->byHost();
         if ($url === '') {
-            $page->orderBy(['id' => SORT_ASC]);
+            $query->orderBy(['id' => SORT_ASC]);
         } else {
-            $page->andWhere(['page.url' => $url]);
+            $query->andWhere(['page.url' => $url]);
         }
-        return $page->one();
+        if (!YII_DEBUG) {
+            $query->cache(self::CACHE_DURATION);
+        }
+        return $query->one();
     }
 }

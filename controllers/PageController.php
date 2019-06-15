@@ -51,6 +51,7 @@ class PageController extends Controller
         if ($page === null) {
             throw new NotFoundHttpException("Page '{$url}' not found");
         }
+        \Yii::$app->params['page'] = $page;
 
         return $this->render('index', [
             'page' => $page,
