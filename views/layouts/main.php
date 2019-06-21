@@ -318,14 +318,13 @@ $page = \Yii::$app->params['page'];
                                                     <h1 class="entry-title"><?= $page->title ?></h1>
                                                 </header><!-- .entry-header -->
 
-
-                                                <?php /*<div class="post-thumbnail">
-                                                    <img width="1068" height="712"
-                                                         src="http://demo.spiderbuzz.com/buzznews/pro-demo1/wp-content/uploads/sites/2/2017/12/18.jpg"
+                                                <?php if (!empty($page->images)) { ?>
+                                                <div class="post-thumbnail">
+                                                    <img src="<?= $page->images[0]->getSourceUrl() ?>"
                                                          class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
-                                                         alt=""
-                                                         srcset="http://demo.spiderbuzz.com/buzznews/pro-demo1/wp-content/uploads/sites/2/2017/12/18.jpg 1068w, http://demo.spiderbuzz.com/buzznews/pro-demo1/wp-content/uploads/sites/2/2017/12/18-300x200.jpg 300w, http://demo.spiderbuzz.com/buzznews/pro-demo1/wp-content/uploads/sites/2/2017/12/18-768x512.jpg 768w, http://demo.spiderbuzz.com/buzznews/pro-demo1/wp-content/uploads/sites/2/2017/12/18-1024x683.jpg 1024w, http://demo.spiderbuzz.com/buzznews/pro-demo1/wp-content/uploads/sites/2/2017/12/18-570x380.jpg 570w"
-                                                         sizes="(max-width: 1068px) 100vw, 1068px"/></div> */?>
+                                                         alt="<?= $page->title ?>">
+                                                </div>
+                                                <?php } ?>
                                                 <!-- .post-thumbnail -->
 
 

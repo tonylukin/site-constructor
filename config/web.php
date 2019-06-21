@@ -1,11 +1,10 @@
 <?php
 
-use creocoder\flysystem\LocalFilesystem;
-use yii\debug\Module;
-use yii\swiftmailer\Mailer;
 use app\models\User;
 use yii\caching\FileCache;
+use yii\debug\Module;
 use yii\log\FileTarget;
+use yii\swiftmailer\Mailer;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
@@ -58,10 +57,6 @@ $config = [
             'rules' => [
                 '<url:.*>' => 'page/index'
             ],
-        ],
-        'fs' => [
-            'class' => LocalFilesystem::class,
-            'path' => '@webroot/images',
         ],
         //*/
     ],

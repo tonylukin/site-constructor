@@ -25,6 +25,10 @@ class FooterMenuWidget extends \yii\bootstrap\Widget
         $this->navigationLinksGetter = $navigationLinksGetter;
     }
 
+    /**
+     * @return string
+     * @throws \yii\db\Exception
+     */
     public function run(): string
     {
         $links = $this->navigationLinksGetter->get(self::COLUMN_COUNT * self::COLUMN_SIZE);

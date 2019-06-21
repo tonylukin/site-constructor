@@ -1,5 +1,9 @@
 <?php
 
+use yii\log\FileTarget;
+use yii\caching\FileCache;
+use creocoder\flysystem\LocalFilesystem;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -12,20 +16,25 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
         '@tests' => '@app/tests',
+        '@webroot' => '@app/web',
     ],
     'components' => [
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => FileCache::class,
         ],
         'log' => [
             'targets' => [
                 [
-                    'class' => 'yii\log\FileTarget',
+                    'class' => FileTarget::class,
                     'levels' => ['error', 'warning'],
                 ],
             ],
         ],
         'db' => $db,
+        'fs' => [
+            'class' => LocalFilesystem::class,
+            'path' => '@webroot/storage',
+        ],
     ],
     'params' => $params,
     /*

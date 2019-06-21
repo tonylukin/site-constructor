@@ -17,12 +17,14 @@
                     <?php foreach ($pages as $page) { ?>
                     <div class="col-lg-3 col-md-3 buzznews-matchheight-article">
                         <div class="middle-bottom-wrapper">
-                            <?php /*
+                            <?php if (!empty($page->images)) { ?>
                             <div class="middle-bottom-wrapper-image">
-                                <img width="370" height="225"
-                                     src="http://demo.spiderbuzz.com/buzznews/pro-demo1/wp-content/uploads/sites/2/2017/12/women-fashion-370x225.jpg"
+                                <img src="<?= $page->images[0]->getSourceUrl() ?>"
                                      class="attachment-buzznews-postlist size-buzznews-postlist wp-post-image"
-                                     alt=""/></div>
+                                     alt="<?= $page->title ?>">
+                            </div>
+                            <?php } ?>
+                            <?php /*
                             <div class="slider-category">
                                 <div class="colorful-cat"><a
                                             href="http://demo.spiderbuzz.com/buzznews/pro-demo1/category/lifestyle/travel/"

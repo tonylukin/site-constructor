@@ -38,11 +38,13 @@
                                 <?php foreach ($pages as $page) { ?>
                                     <div class="col-lg-12 col-md-12 buzznews-matchheight-article">
                                         <div class="middle-bottom-wrapper">
-                                            <?php /*<div class="middle-bottom-wrapper-image">
-                                                <img width="370" height="225"
-                                                     src="http://demo.spiderbuzz.com/buzznews/pro-demo1/wp-content/uploads/sites/2/2017/12/women-fashion-370x225.jpg"
+                                            <?php if (!empty($page->images)) { ?>
+                                            <div class="middle-bottom-wrapper-image">
+                                                <img src="<?= $page->images[0]->getSourceUrl() ?>"
                                                      class="attachment-buzznews-postlist size-buzznews-postlist wp-post-image"
-                                                     alt=""/></div> */ ?>
+                                                     alt="<?= $page->title ?>">
+                                            </div>
+                                            <?php } ?>
                                             <div class="buzznews-article-content">
                                                 <div class="desert-eating">
                                                     <a href="<?= \yii\helpers\Url::to(['page/index', 'url' => $page->url]) ?>"

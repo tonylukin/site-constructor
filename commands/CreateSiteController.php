@@ -4,30 +4,57 @@ namespace app\commands;
 
 use app\services\googleParser\SiteListGetter;
 use app\services\siteCreator\Creator;
+use yii\base\Module;
 use yii\console\Controller;
 use yii\console\ExitCode;
 
 class CreateSiteController extends Controller
 {
     /**
+     * @var
+     */
+    private $creator;
+
+    /**
+     * @var SiteListGetter
+     */
+    private $siteListGetter;
+
+    /**
+     * CreateSiteController constructor.
+     * @param string $id
+     * @param Module $module
+     * @param array $config
+     * @param Creator $creator
+     * @param SiteListGetter $siteListGetter
+     */
+    public function __construct(
+        string $id,
+        Module $module,
+        array $config = [],
+        Creator $creator,
+        SiteListGetter $siteListGetter
+    )
+    {
+        $this->creator = $creator;
+        $this->siteListGetter = $siteListGetter;
+        parent::__construct($id, $module, $config);
+    }
+
+    /**
      * @param int|null $urlCount
      * @return int
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\di\NotInstantiableException
      */
     public function actionIndex(int $urlCount = null): int
     {
         if ($urlCount !== null) {
-            $siteListGetter = \Yii::$container->get(SiteListGetter::class);
-            $siteListGetter->setSearchResultNumber($urlCount);
+            $this->siteListGetter->setSearchResultNumber($urlCount);
         }
-        /** @var Creator $creator */
-        $creator = \Yii::$container->get(Creator::class);
-        $creator->create();
 
-        $this->stdout("New sites: {$creator->getNewSitesCount()}, new pages: {$creator->getNewPagesCount()}");
+        $this->creator->create();
 
+        $this->stdout("New sites: {$this->creator->getNewSitesCount()}, new pages: {$this->creator->getNewPagesCount()}, new images: {$this->creator->getImagesSavedCount()}");
         return ExitCode::OK;
     }
 }

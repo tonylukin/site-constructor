@@ -2,6 +2,7 @@
 
 namespace app\services\siteCreator;
 
+use app\models\Image;
 use app\models\Page;
 use app\models\Site;
 use app\services\googleParser\SiteListGetter;
@@ -32,6 +33,11 @@ class Creator
      * @var int
      */
     private $newPagesCount = 0;
+
+    /**
+     * @var int
+     */
+    private $imagesSavedCount = 0;
 
     /**
      * Creator constructor.
@@ -90,6 +96,18 @@ class Creator
                     $page->url = Inflector::slug($page->title);
 
                     if ($page->save()) {
+                        $images = $this->parser->getImageParser()->getImages();
+                        if (!empty($images)) {
+                            $image = new Image();
+                            $image->page_id = $page->id;
+                            $image->source = $images[0][ImageParser::IMAGE_FILENAME_KEY];
+                            $image->original_url = $images[0][ImageParser::IMAGE_URL_KEY];
+                            if ($image->save()) {
+                                $this->imagesSavedCount++;
+                            } else {
+                                \Yii::error(\implode('; ', $image->getErrorSummary(true)), 'parser');
+                            }
+                        }
                         $this->newPagesCount++;
                     } else {
                         \Yii::error(\implode('; ', $page->getErrorSummary(true)), 'parser');
@@ -120,5 +138,13 @@ class Creator
     public function getNewPagesCount(): int
     {
         return $this->newPagesCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getImagesSavedCount(): int
+    {
+        return $this->imagesSavedCount;
     }
 }

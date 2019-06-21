@@ -20,7 +20,8 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "paquettg/php-html-parser": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
-        "creocoder/yii2-flysystem": "^0.9.3"
+        "creocoder/yii2-flysystem": "^0.9.3",
+        "yiisoft/yii2-imagine": "^2.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

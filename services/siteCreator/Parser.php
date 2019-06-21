@@ -2,6 +2,8 @@
 
 namespace app\services\siteCreator;
 
+use app\models\Image;
+use creocoder\flysystem\LocalFilesystem;
 use GuzzleHttp\Client;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Exceptions\UnknownChildTypeException;
@@ -29,14 +31,22 @@ class Parser
     private $description;
 
     /**
+     * @var ImageParser
+     */
+    private $imageParser;
+
+    /**
      * SiteListGetter constructor.
      * @param Client $client
+     * @param ImageParser $imageParser
      */
     public function __construct(
-        Client $client
+        Client $client,
+        ImageParser $imageParser
     )
     {
         $this->client = $client;
+        $this->imageParser = $imageParser;
     }
 
     /**
@@ -67,13 +77,7 @@ class Parser
         $domTitle = $dom->find('head title')[0];
         $this->title = $domTitle->text();
 
-        $img = $domBody->find('img');
-        $img = $img[0] ?? null;
-        if ($img !== null) {
-            /** @var Dom\HtmlNode $img */
-            $imageUrl = $img->getAttribute('src');
-            // todo save to db
-        }
+        $this->imageParser->parse($domBody, $url);
 
         /** @var Dom\HtmlNode $domDescription */
         $domDescription = $dom->find('meta[name="description"]')[0];
@@ -120,5 +124,13 @@ class Parser
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    /**
+     * @return ImageParser
+     */
+    public function getImageParser(): ImageParser
+    {
+        return $this->imageParser;
     }
 }

@@ -7,6 +7,7 @@ use app\services\siteCreator\Creator;
 use app\services\siteView\PageFinder;
 use app\services\siteView\NavigationLinksGetter;
 use app\services\siteView\LatestPosts;
+use app\services\siteCreator\ImageParser;
 
 return [
     Client::class => [
@@ -29,5 +30,8 @@ return [
     ],
     LatestPosts::class => [
         'class' => LatestPosts::class
-    ]
+    ],
+    ImageParser::class => [
+        'class' => ImageParser::class
+    ],
 ];

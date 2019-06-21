@@ -20,6 +20,7 @@ use yii\db\ActiveRecord;
  * @property string $created_at
  *
  * @property Site $site
+ * @property Image[] $images
  */
 class Page extends ActiveRecord
 {
@@ -78,5 +79,15 @@ class Page extends ActiveRecord
     public static function find()
     {
         return new PageQuery(static::class);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getImages()
+    {
+        return $this->hasMany(Image::class, [
+           'page_id' => 'id'
+        ]);
     }
 }
