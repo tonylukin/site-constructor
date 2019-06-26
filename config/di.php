@@ -1,5 +1,6 @@
 <?php
 
+use app\services\siteCreator\ContentAnalyzer;
 use GuzzleHttp\Client;
 use app\services\googleParser\SiteListGetter;
 use app\services\siteCreator\Parser;
@@ -34,4 +35,7 @@ return [
     ImageParser::class => [
         'class' => ImageParser::class
     ],
+    ContentAnalyzer::class => [
+        'class' => ContentAnalyzer::class
+    ]
 ];

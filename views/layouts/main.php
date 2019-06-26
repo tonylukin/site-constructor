@@ -335,10 +335,18 @@ $page = \Yii::$app->params['page'];
                                                 <nav class="navigation post-navigation" role="navigation">
                                                     <h2 class="screen-reader-text">Post navigation</h2>
                                                     <div class="nav-links">
-                                                        <div class="nav-previous"><a
-                                                                    href="http://demo.spiderbuzz.com/buzznews/pro-demo1/2017/12/10/xbox-one-to-launch-in-china-this-month-after-all/"
-                                                                    rel="prev"><span>Previous article</span> Xbox One to
-                                                                launch in China this month after all</a></div>
+                                                        <?php if ($prevPage = $page->getPrevPage()) { ?>
+                                                        <div class="nav-previous">
+                                                            <a href="<?= \yii\helpers\Url::to(['page/index', 'url' => $prevPage->url]) ?>"
+                                                                    rel="prev"><span>Previous article</span> <?= $prevPage->title ?></a>
+                                                        </div>
+                                                        <?php } ?>
+                                                        <?php if ($nextPage = $page->getNextPage()) { ?>
+                                                        <div class="nav-previous">
+                                                            <a href="<?= \yii\helpers\Url::to(['page/index', 'url' => $nextPage->url]) ?>"
+                                                                    rel="next"><span>Next article</span> <?= $nextPage->title ?></a>
+                                                        </div>
+                                                        <?php } ?>
                                                     </div>
                                                 </nav>
                                             </article>

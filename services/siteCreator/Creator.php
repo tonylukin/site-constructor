@@ -82,6 +82,7 @@ class Creator
                         continue;
                     }
 
+                    $this->parser->getImageParser()->setDomain($domain);
                     $content = $this->parser->parseSiteContent($url);
                     if ($content === null) {
                         continue;

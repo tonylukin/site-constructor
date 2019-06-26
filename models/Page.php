@@ -24,6 +24,8 @@ use yii\db\ActiveRecord;
  */
 class Page extends ActiveRecord
 {
+    private const CACHE_DURATION = 3600 * 24 * 7;
+
     /**
      * {@inheritdoc}
      */
@@ -89,5 +91,35 @@ class Page extends ActiveRecord
         return $this->hasMany(Image::class, [
            'page_id' => 'id'
         ]);
+    }
+
+    /**
+     * @return Page|null
+     */
+    public function getPrevPage(): ?self
+    {
+        $query = self::find()
+            ->where('id < :id', [':id' => $this->id])
+            ->limit(1)
+        ;
+        if (!YII_DEBUG) {
+            $query->cache(self::CACHE_DURATION);
+        }
+        return $query->one();
+    }
+
+    /**
+     * @return Page|null
+     */
+    public function getNextPage(): ?self
+    {
+        $query = self::find()
+            ->where('id > :id', [':id' => $this->id])
+            ->limit(1)
+        ;
+        if (!YII_DEBUG) {
+            $query->cache(self::CACHE_DURATION);
+        }
+        return $query->one();
     }
 }

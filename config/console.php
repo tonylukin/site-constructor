@@ -33,7 +33,7 @@ $config = [
         'db' => $db,
         'fs' => [
             'class' => LocalFilesystem::class,
-            'path' => '@webroot/storage',
+            'path' => '@webroot',
         ],
     ],
     'params' => $params,

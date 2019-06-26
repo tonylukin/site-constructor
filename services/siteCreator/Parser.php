@@ -2,14 +2,14 @@
 
 namespace app\services\siteCreator;
 
-use app\models\Image;
-use creocoder\flysystem\LocalFilesystem;
 use GuzzleHttp\Client;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 
 class Parser
 {
+    private const CONTENT_MIN_LENGTH = 200;
+
     /**
      * @var Client
      */
@@ -36,17 +36,25 @@ class Parser
     private $imageParser;
 
     /**
+     * @var ContentAnalyzer
+     */
+    private $contentAnalyzer;
+
+    /**
      * SiteListGetter constructor.
      * @param Client $client
      * @param ImageParser $imageParser
+     * @param ContentAnalyzer $contentAnalyzer
      */
     public function __construct(
         Client $client,
-        ImageParser $imageParser
+        ImageParser $imageParser,
+        ContentAnalyzer $contentAnalyzer
     )
     {
         $this->client = $client;
         $this->imageParser = $imageParser;
+        $this->contentAnalyzer = $contentAnalyzer;
     }
 
     /**
@@ -73,6 +81,19 @@ class Parser
             \Yii::error('DOM body is null', 'parser');
             return null;
         }
+
+        try {
+            $html = $domBody->innerHtml();
+        } catch (UnknownChildTypeException $e) {
+            \Yii::error("UnknownChildTypeException: {$e->getMessage()}", 'parser');
+            return null;
+        }
+
+        $html = $this->contentAnalyzer->analyze($html);
+        if (\strlen(\trim($html)) < self::CONTENT_MIN_LENGTH) {
+            return null;
+        }
+
         /** @var Dom\HtmlNode $domTitle */
         $domTitle = $dom->find('head title')[0];
         $this->title = $domTitle->text();
@@ -89,13 +110,6 @@ class Parser
         $domKeywords = $dom->find('meta[name="keywords"]')[0];
         if ($domKeywords !== null) {
             $this->keywords = \substr($domKeywords->getAttribute('content'), 0, 255);
-        }
-
-        try {
-            $html = $domBody->innerHtml();
-        } catch (UnknownChildTypeException $e) {
-            \Yii::error("UnknownChildTypeException: {$e->getMessage()}", 'parser');
-            return null;
         }
 
         $html = \strip_tags($html);

@@ -10,7 +10,7 @@ use yii\imagine\Image;
 
 class ImageParser
 {
-    private const IMAGE_PATH = 'storage' . DIRECTORY_SEPARATOR . 'images';
+    private const IMAGE_PATH = 'images';
     private const IMAGE_WIDTH_MAX = 400;
     private const IMAGE_HEIGHT_MAX = 300;
 
@@ -33,18 +33,24 @@ class ImageParser
     private $maxSizeImage;
 
     /**
+     * @var string
+     */
+    private $domain;
+
+    /**
      * ImageParser constructor.
      */
     public function __construct()
     {
-//        $this->fs = \Yii::$app->fs;
+        $this->fs = \Yii::$app->fs;
     }
 
     /**
      * @param HtmlNode $domBody
      * @param string $url
+     * @param string|null $domain
      */
-    public function parse(HtmlNode $domBody, string $url): void
+    public function parse(HtmlNode $domBody, string $url, ?string $domain = null): void
     {
         $this->images = [];
         $this->maxSizeImage = null;
@@ -106,10 +112,14 @@ class ImageParser
      */
     private function saveImage(ImageInterface $image, string $imageSource, string $imageExtension): void
     {
-        $fileName = \implode(DIRECTORY_SEPARATOR, [
+        $filePath = \implode(DIRECTORY_SEPARATOR, [
+            'storage',
+            $this->domain,
             self::IMAGE_PATH,
-            \md5($imageSource) . '.' . $imageExtension
         ]);
+        $fileName = $filePath . DIRECTORY_SEPARATOR . \md5($imageSource) . '.' . $imageExtension;
+        $this->fs->createDir($filePath);
+
         if ($image->save(\Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $fileName)) {
             $this->images[] = [
                 self::IMAGE_URL_KEY => $imageSource,
@@ -135,5 +145,15 @@ class ImageParser
         $scheme = \parse_url($url, PHP_URL_SCHEME);
         $host = \parse_url($url, PHP_URL_HOST);
         return "{$scheme}://{$host}{$imageUrl}";
+    }
+
+    /**
+     * @param string $domain
+     * @return ImageParser
+     */
+    public function setDomain(string $domain): ImageParser
+    {
+        $this->domain = $domain;
+        return $this;
     }
 }
