@@ -79,11 +79,12 @@ class ImageParser
 
             /** @var Box $size */
             $size = $image->getSize();
-            if ($size->getWidth() > self::IMAGE_WIDTH_MAX || $size->getHeight() > self::IMAGE_HEIGHT_MAX) {
-                $image->resize(new Box(self::IMAGE_WIDTH_MAX, self::IMAGE_HEIGHT_MAX));
-                $this->saveImage($image, $imageSource, $imageExtension);
-                return;
-            }
+            // it means that we get the first result that under our size. but it is not the best way. better to get the biggest image
+//            if ($size->getWidth() > self::IMAGE_WIDTH_MAX || $size->getHeight() > self::IMAGE_HEIGHT_MAX) {
+//                $image->resize(new Box(self::IMAGE_WIDTH_MAX, self::IMAGE_HEIGHT_MAX));
+//                $this->saveImage($image, $imageSource, $imageExtension);
+//                return;
+//            }
 
             $square = $size->getWidth() * $size->getHeight();
             if ($this->maxSizeImage === null || $square > $this->maxSizeImage[0]) {
@@ -91,8 +92,9 @@ class ImageParser
             }
         }
 
-        // finally save the biggest image of nothing was saved within the loop
+        // finally save the biggest image if nothing was saved within the loop
         if ($this->maxSizeImage !== null) {
+            $this->maxSizeImage[1]->resize(new Box(self::IMAGE_WIDTH_MAX, self::IMAGE_HEIGHT_MAX));
             $this->saveImage($this->maxSizeImage[1], $this->maxSizeImage[2], $this->maxSizeImage[3]);
         }
     }

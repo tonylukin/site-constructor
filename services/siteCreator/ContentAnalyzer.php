@@ -36,6 +36,6 @@ class ContentAnalyzer
                 $wordsToReplace[] = $wordToReplace;
             }
         }
-        return \str_replace($wordsToBeReplaced, $wordsToReplace, $text); // todo
+        return \str_replace($wordsToBeReplaced, $wordsToReplace, $text);
     }
 }

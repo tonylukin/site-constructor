@@ -8,7 +8,7 @@ use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 
 class Parser
 {
-    private const CONTENT_MIN_LENGTH = 200;
+    private const CONTENT_MIN_LENGTH = 500;
 
     /**
      * @var Client
@@ -89,11 +89,6 @@ class Parser
             return null;
         }
 
-        $html = $this->contentAnalyzer->cleanFromLongWords($html);
-        if (\strlen(\trim($html)) < self::CONTENT_MIN_LENGTH || $this->contentAnalyzer->checkContentIsEnglish($html)) {
-            return null;
-        }
-
         /** @var Dom\HtmlNode $domTitle */
         $domTitle = $dom->find('head title')[0];
         $this->title = $domTitle->text();
@@ -113,6 +108,12 @@ class Parser
         }
 
         $html = \strip_tags($html);
+
+        $html = $this->contentAnalyzer->cleanFromLongWords($html);
+        if (\strlen(\trim($html)) < self::CONTENT_MIN_LENGTH || !$this->contentAnalyzer->checkContentIsEnglish($html)) {
+            return null;
+        }
+
         return \trim($html);
     }
 

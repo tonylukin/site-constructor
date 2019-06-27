@@ -1,4 +1,7 @@
 <?php
+
+use creocoder\flysystem\LocalFilesystem;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/test_db.php';
 
@@ -11,6 +14,7 @@ return [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@webroot' => '@app/web',
     ],
     'language' => 'en-US',
     'components' => [
@@ -36,6 +40,10 @@ return [
                 'domain' => 'localhost',
             ],
             */
+        ],
+        'fs' => [
+            'class' => LocalFilesystem::class,
+            'path' => '@webroot',
         ],
     ],
     'container' => [

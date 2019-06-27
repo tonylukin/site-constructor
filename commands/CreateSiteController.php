@@ -54,7 +54,7 @@ class CreateSiteController extends Controller
 
         $this->creator->create();
 
-        $this->stdout("New sites: {$this->creator->getNewSitesCount()}, new pages: {$this->creator->getNewPagesCount()}, new images: {$this->creator->getImagesSavedCount()}");
+        $this->stdout("New sites: {$this->creator->getNewSitesCount()}, new pages: {$this->creator->getNewPagesCount()}, updated pages: {$this->creator->getUpdatedPagesCount()}, new images: {$this->creator->getImagesSavedCount()}");
         return ExitCode::OK;
     }
 }

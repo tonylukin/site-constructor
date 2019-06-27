@@ -17,6 +17,7 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
         '@views' => '@app/views',
+        '@webroot' => '@app/web',
     ],
     'components' => [
         'request' => [

@@ -37,6 +37,11 @@ class Creator
     /**
      * @var int
      */
+    private $updatedPagesCount = 0;
+
+    /**
+     * @var int
+     */
     private $imagesSavedCount = 0;
 
     /**
@@ -58,7 +63,6 @@ class Creator
      */
     public function create(): void
     {
-        // todo add counters for new sites and pages
         foreach ($this->queries as $domain => $query) {
             $urlList = $this->siteListGetter->getSearchList($query);
             $transaction = \Yii::$app->db->beginTransaction();
@@ -78,8 +82,8 @@ class Creator
 
                 foreach ($urlList as $url) {
                     $page = Page::find()->bySourceUrl($url)->one();
-                    if ($page !== null) {
-                        continue;
+                    if ($page === null) {
+                        $page = new Page();
                     }
 
                     $this->parser->getImageParser()->setDomain($domain);
@@ -87,7 +91,6 @@ class Creator
                     if ($content === null) {
                         continue;
                     }
-                    $page = new Page();
                     $page->title = $this->parser->getTitle();
                     $page->keywords = $this->parser->getKeywords();
                     $page->description = $this->parser->getDescription();
@@ -109,7 +112,11 @@ class Creator
                                 \Yii::error(\implode('; ', $image->getErrorSummary(true)), 'parser');
                             }
                         }
-                        $this->newPagesCount++;
+                        if ($page->isNewRecord) {
+                            $this->newPagesCount++;
+                        } else {
+                            $this->updatedPagesCount++;
+                        }
                     } else {
                         \Yii::error(\implode('; ', $page->getErrorSummary(true)), 'parser');
                     }
@@ -147,5 +154,13 @@ class Creator
     public function getImagesSavedCount(): int
     {
         return $this->imagesSavedCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUpdatedPagesCount(): int
+    {
+        return $this->updatedPagesCount;
     }
 }
