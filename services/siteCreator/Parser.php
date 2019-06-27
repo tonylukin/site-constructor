@@ -89,8 +89,8 @@ class Parser
             return null;
         }
 
-        $html = $this->contentAnalyzer->analyze($html);
-        if (\strlen(\trim($html)) < self::CONTENT_MIN_LENGTH) {
+        $html = $this->contentAnalyzer->cleanFromLongWords($html);
+        if (\strlen(\trim($html)) < self::CONTENT_MIN_LENGTH || $this->contentAnalyzer->checkContentIsEnglish($html)) {
             return null;
         }
 

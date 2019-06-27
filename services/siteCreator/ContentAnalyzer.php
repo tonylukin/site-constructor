@@ -4,22 +4,38 @@ namespace app\services\siteCreator;
 
 class ContentAnalyzer
 {
-    public function analyze(string $text): string
+    /**
+     * @param string $text
+     * @return bool
+     */
+    public function checkContentIsEnglish(string $text): bool
     {
-        $text = $this->fixNonEnglishText($text);
+        if (!\preg_match_all('/[\x20-\x7E]/', $text, $matches)) {
+            return false;
+        }
 
-        return $text;
+        $textLength = \strlen($text);
+        $englishTextLength = \strlen(\implode('', $matches[0]));
+
+        return $englishTextLength / $textLength > 0.8;
     }
 
-    private function fixNonEnglishText(string $text): string
+    /**
+     * @param string $text
+     * @return string
+     */
+    public function cleanFromLongWords(string $text): string
     {
-        $match = \preg_match('/^[^\x20-\x7E]$/', $text);
-        $res = preg_replace("/[^[:alnum:][:space:]]/u", '', $text);
-        return \preg_replace('/^[^\x20-\x7E]$/u', '', $text);
-    }
-
-    private function cleanFromLongWords(string $text): string
-    {
-        \preg_split('/(?=[A-Z])/', $text);
+        $wordsToBeReplaced = [];
+        $wordsToReplace = [];
+        if (\preg_match_all('/[A-Z]?[a-z]+([A-Z][a-z]+)+/', $text, $matches)) {
+            foreach ($matches[0] as $camelCasedWord) {
+                $wordsToBeReplaced[] = $camelCasedWord;
+                $pieces = \preg_split('/(?=[A-Z])/', $camelCasedWord);
+                $wordToReplace = \strtolower(\trim(\implode(' ', $pieces)));
+                $wordsToReplace[] = $wordToReplace;
+            }
+        }
+        return \str_replace($wordsToBeReplaced, $wordsToReplace, $text); // todo
     }
 }
