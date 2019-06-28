@@ -112,3 +112,12 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+body {
+    background: url("../images/tex2res1.png") fixed;
+    /*background: url("../images/natural_paper.png") fixed;*/
+}
+
+#page {
+    background: #fff;
+}

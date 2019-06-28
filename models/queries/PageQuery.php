@@ -13,13 +13,13 @@ use yii\db\ActiveQuery;
 class PageQuery extends ActiveQuery
 {
     /**
-     * @param string $sourceUrl
+     * @param string[] $sourceUrls
      * @return PageQuery
      */
-    public function bySourceUrl(string $sourceUrl): self
+    public function bySourceUrls(array $sourceUrls): self
     {
         return $this->andWhere([
-            'source_url' => $sourceUrl,
+            'source_url' => $sourceUrls,
         ]);
     }
 

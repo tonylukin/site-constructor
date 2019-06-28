@@ -65,54 +65,66 @@ class Creator
     {
         foreach ($this->queries as $domain => $query) {
             $urlList = $this->siteListGetter->getSearchList($query);
-            $transaction = \Yii::$app->db->beginTransaction();
 
-            try {
-                $site = Site::find()->byWordOrDomain($query, $domain)->one();
-                if ($site === null) {
-                    $site = new Site();
-                    $site->search_word = $query;
-                    $site->domain = $domain;
+            $site = Site::find()->byWordOrDomain($query, $domain)->one();
+            if ($site === null) {
+                $site = new Site();
+                $site->search_word = $query;
+                $site->domain = $domain;
 
-                    if (!$site->save()) {
-                        throw new \Exception('Error on saving site: ' . \implode('; ', $site->getErrorSummary(true)));
-                    }
-                    $this->newSitesCount++;
+                if (!$site->save()) {
+                    throw new \Exception('Error on saving site: ' . \implode('; ', $site->getErrorSummary(true)));
                 }
+                $this->newSitesCount++;
+            }
 
-                foreach ($urlList as $url) {
-                    $page = Page::find()->bySourceUrl($url)->one();
-                    if ($page === null) {
-                        $page = new Page();
-                    }
+            $pages = Page::find()->bySourceUrls($urlList)->indexBy('source_url')->all();
+            foreach ($urlList as $url) {
+                $page = $pages[$url] ?? null;
+                if ($page === null) {
+                    $page = new Page();
+                }
+                $isNewRecord = $page->isNewRecord;
 
-                    $this->parser->getImageParser()->setDomain($domain);
-                    $content = $this->parser->parseSiteContent($url);
-                    if ($content === null) {
-                        continue;
-                    }
-                    $page->title = $this->parser->getTitle();
-                    $page->keywords = $this->parser->getKeywords();
-                    $page->description = $this->parser->getDescription();
-                    $page->site_id = $site->id;
-                    $page->content = $content;
-                    $page->source_url = $url;
-                    $page->url = Inflector::slug($page->title);
+                $this->parser->getImageParser()->setDomain($domain);
+                $content = $this->parser->parseSiteContent($url);
+                if ($content === null) {
+                    continue;
+                }
+                $page->title = $this->parser->getTitle();
+                $page->keywords = $this->parser->getKeywords();
+                $page->description = $this->parser->getDescription();
+                $page->site_id = $site->id;
+                $page->content = $content;
+                $page->source_url = $url;
+                $page->url = Inflector::slug($page->title);
+
+                $transaction = \Yii::$app->db->beginTransaction();
+                try {
 
                     if ($page->save()) {
                         $images = $this->parser->getImageParser()->getImages();
                         if (!empty($images)) {
-                            $image = new Image();
-                            $image->page_id = $page->id;
-                            $image->source = $images[0][ImageParser::IMAGE_FILENAME_KEY];
-                            $image->original_url = $images[0][ImageParser::IMAGE_URL_KEY];
-                            if ($image->save()) {
-                                $this->imagesSavedCount++;
-                            } else {
-                                \Yii::error(\implode('; ', $image->getErrorSummary(true)), 'parser');
+                            $imageFilename = $images[0][ImageParser::IMAGE_FILENAME_KEY];
+                            $imageUrl = $images[0][ImageParser::IMAGE_URL_KEY];
+                            $image = Image::findOne([
+                                'source' => $imageFilename,
+                                'original_url' => $imageUrl
+                            ]);
+
+                            if ($image === null) {
+                                $image = new Image();
+                                $image->page_id = $page->id;
+                                $image->source = $imageFilename;
+                                $image->original_url = $imageUrl;
+                                if ($image->save()) {
+                                    $this->imagesSavedCount++;
+                                } else {
+                                    \Yii::error(\implode('; ', $image->getErrorSummary(true)), 'parser');
+                                }
                             }
                         }
-                        if ($page->isNewRecord) {
+                        if ($isNewRecord) {
                             $this->newPagesCount++;
                         } else {
                             $this->updatedPagesCount++;
@@ -120,13 +132,14 @@ class Creator
                     } else {
                         \Yii::error(\implode('; ', $page->getErrorSummary(true)), 'parser');
                     }
-                }
-                $transaction->commit();
 
-            } catch (\Throwable $e) {
-                \Yii::error($e->getMessage(), 'parser');
-                if ($transaction->isActive) {
-                    $transaction->rollBack();
+                    $transaction->commit();
+
+                } catch (\Throwable $e) {
+                    \Yii::error($e->getMessage(), 'parser');
+                    if ($transaction->isActive) {
+                        $transaction->rollBack();
+                    }
                 }
             }
         }

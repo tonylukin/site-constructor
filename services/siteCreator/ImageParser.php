@@ -10,6 +10,17 @@ use yii\imagine\Image;
 
 class ImageParser
 {
+    private const ALLOWED_IMAGES = [
+        'jpg' => 'jpg',
+        IMAGETYPE_JPEG => 'jpeg',
+        IMAGETYPE_PNG => 'png',
+        IMAGETYPE_GIF => 'gif',
+        IMAGETYPE_WBMP => 'wbmp',
+        IMAGETYPE_XBM => 'xbm',
+        IMAGETYPE_WEBP => 'webp',
+        IMAGETYPE_BMP => 'bmp'
+    ];
+
     private const IMAGE_PATH = 'images';
     private const IMAGE_WIDTH_MAX = 400;
     private const IMAGE_HEIGHT_MAX = 300;
@@ -48,9 +59,8 @@ class ImageParser
     /**
      * @param HtmlNode $domBody
      * @param string $url
-     * @param string|null $domain
      */
-    public function parse(HtmlNode $domBody, string $url, ?string $domain = null): void
+    public function parse(HtmlNode $domBody, string $url): void
     {
         $this->images = [];
         $this->maxSizeImage = null;
@@ -66,15 +76,36 @@ class ImageParser
             }
 
             $imageExtension = \pathinfo($imageSource, PATHINFO_EXTENSION);
-            if (!\in_array($imageExtension, ['jpg', 'jpeg', 'png', 'gif'], true)) {
+            if (!$imageExtension) {
+                try {
+                    $imageExtension = self::ALLOWED_IMAGES[\exif_imagetype($imageSource)] ?? null;
+                } catch (\Throwable $e) {
+                    \Yii::error("Error on getting image ext: {$e->getMessage()}", 'image-parser');
+                    continue;
+                }
+            }
+            if (!\in_array($imageExtension, self::ALLOWED_IMAGES, true)) {
                 continue;
             }
 
             $imageSource = $this->normalizeImageUrl($imageSource, $url);
             try {
-                $image = Image::frame($imageSource, 0, '000');
+                $image = $this->createFromSource($imageSource);
+
             } catch (\Throwable $e) {
-                continue;
+                if ($e->getCode() === 35) {
+                    try {
+                        $image = $this->createFromSource($this->removeHttps($imageSource));
+
+                    } catch (\Throwable $e) {
+                        \Yii::error("Error on creating image object from the URL: {$e->getMessage()}", 'image-parser');
+                        continue;
+                    }
+
+                } else {
+                    \Yii::error("Error on creating image object from the URL: {$e->getMessage()}", 'image-parser');
+                    continue;
+                }
             }
 
             /** @var Box $size */
@@ -122,12 +153,21 @@ class ImageParser
         $fileName = $filePath . DIRECTORY_SEPARATOR . \md5($imageSource) . '.' . $imageExtension;
         $this->fs->createDir($filePath);
 
-        if ($image->save(\Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $fileName)) {
+        if ($image->save(\Yii::getAlias('@app') . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . $fileName)) {
             $this->images[] = [
                 self::IMAGE_URL_KEY => $imageSource,
                 self::IMAGE_FILENAME_KEY => $fileName
             ];
         }
+    }
+
+    /**
+     * @param string $imageSource
+     * @return ImageInterface
+     */
+    private function createFromSource(string $imageSource): ImageInterface
+    {
+        return Image::frame($imageSource, 0, '000');
     }
 
     /**
@@ -147,6 +187,15 @@ class ImageParser
         $scheme = \parse_url($url, PHP_URL_SCHEME);
         $host = \parse_url($url, PHP_URL_HOST);
         return "{$scheme}://{$host}{$imageUrl}";
+    }
+
+    /**
+     * @param string $url
+     * @return string
+     */
+    private function removeHttps(string $url): string
+    {
+        return \str_replace('https', 'http', $url);
     }
 
     /**

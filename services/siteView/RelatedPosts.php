@@ -23,7 +23,7 @@ class RelatedPosts
         }
 
         $relatedId = $id;
-        while (($relatedId += $step) < 5000) {
+        while (($relatedId += $step) < 1000) {
             $ids[] = $relatedId;
         }
 
@@ -37,6 +37,7 @@ class RelatedPosts
     public function getByPage(Page $page): array
     {
         $query = Page::find()
+            ->with('images')
             ->where(['id' => $this->getRelatedIds((int) $page->id)])
             ->orderBy(['id' => SORT_ASC])
             ->limit(self::POST_COUNT)

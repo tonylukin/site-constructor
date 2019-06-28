@@ -9,6 +9,8 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use yii\web\ErrorAction;
+use yii\captcha\CaptchaAction;
 
 class SiteController extends Controller
 {
@@ -45,10 +47,11 @@ class SiteController extends Controller
     {
         return [
             'error' => [
-                'class' => 'yii\web\ErrorAction',
+                'class' => ErrorAction::class,
+                'layout' => 'default'
             ],
             'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
+                'class' => CaptchaAction::class,
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];

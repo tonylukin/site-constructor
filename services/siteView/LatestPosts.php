@@ -16,6 +16,7 @@ class LatestPosts
     public function get(?Page $page = null): array
     {
         $query = Page::find()
+            ->with('images')
             ->orderBy(['id' => SORT_DESC])
             ->limit(self::POST_COUNT)
         ;

@@ -109,9 +109,9 @@ $page = \Yii::$app->params['page'];
     <link rel='stylesheet' id='bootstrap-css'
           href='/buzznews/css/bootstrap.css?ver=1.0.0'
           type='text/css' media=''/>
-    <link rel='stylesheet' id='font-awesome-css'
+    <!--<link rel='stylesheet' id='font-awesome-css'
           href='/buzznews/font-awesome.css?ver=1.0.0'
-          type='text/css' media=''/>
+          type='text/css' media=''/>-->
     <link rel='stylesheet' id='buzznews-color-css'
           href='/buzznews/css/color.css?ver=1.0.0'
           type='text/css' media=''/>
