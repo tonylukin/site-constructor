@@ -2,6 +2,10 @@
 /**
  * @var \app\models\Page[] $pages
  */
+
+if (empty($pages)) {
+    return;
+}
 ?>
 
 <section id="buzznews_sidebar_gridview_section-1"
@@ -60,8 +64,11 @@
                                                                src='http://0.gravatar.com/avatar/019a36493aaaa0c0c163af01a86e63fc?s=25&#038;d=mm&#038;r=g'
                                                                class='avatar avatar-25 photo img-circle'
                                                                height='25' width='25'/></a>
-                                                    </div>
-                                                    <span>2 years ago</span>
+                                                    </div> */ ?>
+                                                    <?php if ($page->publish_date) { ?>
+                                                        <span><?= $page->publish_date ?></span>
+                                                    <?php } ?>
+                                                    <?php /* VIEWS!!!!
                                                     <div class="pull-right">
                                                         <svg xmlns="http://www.w3.org/2000/svg"
                                                              width="19" height="15"

@@ -18,6 +18,7 @@ use yii\db\ActiveRecord;
  * @property string $source_url
  * @property int $site_id
  * @property string $created_at
+ * @property string $publish_date
  *
  * @property Site $site
  * @property Image[] $images
@@ -25,6 +26,11 @@ use yii\db\ActiveRecord;
 class Page extends ActiveRecord
 {
     private const CACHE_DURATION = 3600 * 24 * 7;
+
+    /**
+     * @var int
+     */
+    private $pageIndex = 0;
 
     /**
      * {@inheritdoc}
@@ -44,7 +50,7 @@ class Page extends ActiveRecord
             [['source_url'], 'unique'],
             [['content'], 'string'],
             [['site_id'], 'integer'],
-            [['created_at'], 'safe'],
+            [['created_at', 'publish_date'], 'safe'],
             [['title', 'keywords', 'description'], 'string', 'max' => 255],
             [['site_id'], 'exist', 'skipOnError' => true, 'targetClass' => Site::className(), 'targetAttribute' => ['site_id' => 'id']],
         ];
@@ -99,7 +105,7 @@ class Page extends ActiveRecord
     public function getPrevPage(): ?self
     {
         $query = self::find()
-            ->where('id < :id', [':id' => $this->id])
+            ->andWhere('id < :id', [':id' => $this->id])
             ->limit(1)
         ;
         if (!YII_DEBUG) {
@@ -114,12 +120,33 @@ class Page extends ActiveRecord
     public function getNextPage(): ?self
     {
         $query = self::find()
-            ->where('id > :id', [':id' => $this->id])
+            ->andWhere('id > :id', [':id' => $this->id])
             ->limit(1)
         ;
         if (!YII_DEBUG) {
             $query->cache(self::CACHE_DURATION);
         }
         return $query->one();
+    }
+
+    /**
+     * @param int $pageIndex
+     * @return Page
+     */
+    public function setPageIndex(int $pageIndex): Page
+    {
+        $this->pageIndex = $pageIndex;
+        return $this;
+    }
+
+    public function beforeSave($insert): bool
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        $days = \round($this->pageIndex / 3, 0, PHP_ROUND_HALF_DOWN) * \random_int(1, 2);
+        $this->publish_date = (new \DateTime())->modify("+ {$days} days")->format('Y-m-d');
+        return true;
     }
 }

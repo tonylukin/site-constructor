@@ -37,5 +37,8 @@ return [
     ],
     ContentAnalyzer::class => [
         'class' => ContentAnalyzer::class
+    ],
+    \app\services\siteCreator\CreatorConfig::class => [
+        'class' => \app\services\siteCreator\CreatorConfig::class
     ]
 ];

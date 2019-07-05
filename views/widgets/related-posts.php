@@ -2,6 +2,10 @@
 /**
  * @var \app\models\Page[] $pages
  */
+
+if (empty($pages)) {
+    return;
+}
 ?>
 
 <!------ Latest News full Section -------->
@@ -36,7 +40,8 @@
                                     <a href="<?= \yii\helpers\Url::to(['page/index', 'url' => $page->url]) ?>"
                                        rel="bookmark"><?= $page->title ?></a>
                                 </div>
-                                <?php /*<div class="image">
+                                <div class="image">
+                                    <?php /*
                                     <div class="post-author d-none"><a rel="bookmark"
                                                                        href="http://demo.spiderbuzz.com/buzznews/pro-demo1/author/buzznews/"><img
                                                     alt=''
@@ -44,8 +49,11 @@
                                                     class='avatar avatar-25 photo img-circle'
                                                     height='25'
                                                     width='25'/></a>
-                                    </div>
-                                    <span>2 years ago</span>
+                                    </div> */ ?>
+                                    <?php if ($page->publish_date) { ?>
+                                        <span><?= $page->publish_date ?></span>
+                                    <?php } ?>
+                                    <?php /* VIEWS!!!
                                     <div class="pull-right">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="19" height="15"
                                              viewBox="0 0 19 15">
@@ -56,7 +64,8 @@
                                         </svg>
                                         <span> 138</span>
                                     </div>
-                                </div>*/ ?>
+                                    */ ?>
+                                </div>
                             </div>
                         </div>
                     </div>

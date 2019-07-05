@@ -4,6 +4,7 @@ namespace app\models\queries;
 
 use app\models\Page;
 use yii\db\ActiveQuery;
+use yii\db\Expression;
 
 /**
  * This is the ActiveQuery class for [[\app\models\Page]].
@@ -12,6 +13,16 @@ use yii\db\ActiveQuery;
  */
 class PageQuery extends ActiveQuery
 {
+    public function init()
+    {
+        $this->andWhere([
+            '<=',
+            'page.publish_date',
+            new Expression('NOW()')
+        ]);
+        parent::init();
+    }
+
     /**
      * @param string[] $sourceUrls
      * @return PageQuery

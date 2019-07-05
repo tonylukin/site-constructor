@@ -316,6 +316,11 @@ $page = \Yii::$app->params['page'];
 
                                                 <header class="entry-header">
                                                     <h1 class="entry-title"><?= $page->title ?></h1>
+                                                    <?php if ($page->publish_date) { ?>
+                                                    <div class="entry-meta">
+                                                        <span class="posted-on">Posted on <?= (new \DateTime($page->publish_date))->format('F d, Y') ?></span>
+                                                    </div>
+                                                    <?php } ?>
                                                 </header><!-- .entry-header -->
 
                                                 <?php if (!empty($page->images)) { ?>

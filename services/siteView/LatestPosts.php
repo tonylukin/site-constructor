@@ -21,7 +21,7 @@ class LatestPosts
             ->limit(self::POST_COUNT)
         ;
         if ($page !== null) {
-            $query->where('id != :id', [':id' => $page->id]);
+            $query->andWhere('id != :id', [':id' => $page->id]);
         }
         if (!YII_DEBUG) {
             $query->cache(self::CACHE_DURATION);

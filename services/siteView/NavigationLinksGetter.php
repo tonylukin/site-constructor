@@ -16,7 +16,7 @@ class NavigationLinksGetter
         $sql = <<<SQL
 SELECT `p`.`title`, `p`.`url` FROM `page` `p`
 INNER JOIN `site` `s` ON s.id = p.site_id
-WHERE s.domain = :domain
+WHERE s.domain = :domain AND p.publish_date <= NOW()
 LIMIT {$count}
 SQL;
         $query = \Yii::$app
