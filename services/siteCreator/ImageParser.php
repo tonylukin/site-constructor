@@ -64,50 +64,19 @@ class ImageParser
     {
         $this->images = [];
         $this->maxSizeImage = null;
-        $imageSource = null;
+        $imageUrl = null;
         $imageExtension = null;
 
         /** @var HtmlNode[] $images */
         $images = $domBody->find('img');
         foreach ($images as $img) {
-            $imageSource = $img->getAttribute('src');
-            if (!$imageSource) {
+            if (($imageData = $this->parseImageByUrl($imageUrl = $img->getAttribute('src'), $url)) === null
+                && ($imageData = $this->parseImageByUrl($imageUrl = $img->getAttribute('data-src'), $url)) === null) {
                 continue;
             }
 
-            $imageExtension = \pathinfo($imageSource, PATHINFO_EXTENSION);
-            if (!$imageExtension) {
-                try {
-                    $imageExtension = self::ALLOWED_IMAGES[\exif_imagetype($imageSource)] ?? null;
-                } catch (\Throwable $e) {
-                    \Yii::error("Error on getting image ext: {$e->getMessage()}", 'image-parser');
-                    continue;
-                }
-            }
-            if (!\in_array($imageExtension, self::ALLOWED_IMAGES, true)) {
-                continue;
-            }
-
-            $imageSource = $this->normalizeImageUrl($imageSource, $url);
-            try {
-                $image = $this->createFromSource($imageSource);
-
-            } catch (\Throwable $e) {
-                if ($e->getCode() === 35) {
-                    try {
-                        $image = $this->createFromSource($this->removeHttps($imageSource));
-
-                    } catch (\Throwable $e) {
-                        \Yii::error("Error on creating image object from the URL: {$e->getMessage()}", 'image-parser');
-                        continue;
-                    }
-
-                } else {
-                    \Yii::error("Error on creating image object from the URL: {$e->getMessage()}", 'image-parser');
-                    continue;
-                }
-            }
-
+            /** @var ImageInterface $image */
+            [$image, $imageExtension] = $imageData;
             /** @var Box $size */
             $size = $image->getSize();
             // it means that we get the first result that under our size. but it is not the best way. better to get the biggest image
@@ -119,7 +88,7 @@ class ImageParser
 
             $square = $size->getWidth() * $size->getHeight();
             if ($this->maxSizeImage === null || $square > $this->maxSizeImage[0]) {
-                $this->maxSizeImage = [$square, $image, $imageSource, $imageExtension];
+                $this->maxSizeImage = [$square, $image, $imageUrl, $imageExtension];
             }
         }
 
@@ -139,6 +108,54 @@ class ImageParser
     }
 
     /**
+     * @param string|null $imageUrl
+     * @param string $url
+     * @return array|null
+     */
+    private function parseImageByUrl(?string $imageUrl, string $url): ?array
+    {
+        if (!$imageUrl) {
+            return null;
+        }
+
+        $imageUrl = $this->normalizeImageUrl($imageUrl);
+        $imageExtension = \pathinfo($imageUrl, PATHINFO_EXTENSION);
+        if (!$imageExtension) {
+            try {
+                $imageExtension = self::ALLOWED_IMAGES[\exif_imagetype($imageUrl)] ?? null;
+            } catch (\Throwable $e) {
+                \Yii::error("Error on getting image ext: {$e->getMessage()}", 'image-parser');
+                return null;
+            }
+        }
+        if (!\in_array($imageExtension, self::ALLOWED_IMAGES, true)) {
+            return null;
+        }
+
+        $imageUrl = $this->absoluteImageUrl($imageUrl, $url);
+        try {
+            $image = $this->createFromSource($imageUrl);
+
+        } catch (\Throwable $e) {
+            if ($e->getCode() === 35) {
+                try {
+                    $image = $this->createFromSource($this->removeHttps($imageUrl));
+
+                } catch (\Throwable $e) {
+                    \Yii::error("Error on creating image object from the URL: {$e->getMessage()}", 'image-parser');
+                    return null;
+                }
+
+            } else {
+                \Yii::error("Error on creating image object from the URL: {$e->getMessage()}", 'image-parser');
+                return null;
+            }
+        }
+
+        return [$image, $imageExtension];
+    }
+
+    /**
      * @param ImageInterface $image
      * @param string $imageSource
      * @param string $imageExtension
@@ -153,12 +170,11 @@ class ImageParser
         $fileName = $filePath . DIRECTORY_SEPARATOR . \md5($imageSource) . '.' . $imageExtension;
         $this->fs->createDir($filePath);
 
-        if ($image->save(\Yii::getAlias('@app') . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . $fileName)) {
-            $this->images[] = [
-                self::IMAGE_URL_KEY => $imageSource,
-                self::IMAGE_FILENAME_KEY => $fileName
-            ];
-        }
+        $image->save(\Yii::getAlias('@app') . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . $fileName);
+        $this->images[] = [
+            self::IMAGE_URL_KEY => $imageSource,
+            self::IMAGE_FILENAME_KEY => $fileName,
+        ];
     }
 
     /**
@@ -172,10 +188,29 @@ class ImageParser
 
     /**
      * @param string $imageUrl
+     * @return string
+     */
+    private function normalizeImageUrl(string $imageUrl): string
+    {
+        foreach (self::ALLOWED_IMAGES as $extension) {
+            if (($pos = \strpos($imageUrl, "{$extension}?")) === false
+                && ($pos = \strpos($imageUrl, "{$extension}#")) === false) {
+                continue;
+            }
+
+            $pos += \strlen($extension);
+            return \substr($imageUrl, 0, $pos);
+        }
+
+        return $imageUrl;
+    }
+
+    /**
+     * @param string $imageUrl
      * @param string $url
      * @return string
      */
-    private function normalizeImageUrl(string $imageUrl, string $url): string
+    private function absoluteImageUrl(string $imageUrl, string $url): string
     {
         if (\strpos($imageUrl, 'http') === 0) {
             return $imageUrl;

@@ -53,6 +53,10 @@ class CreatorConfig
      */
     public function removeConfig(array $config): void
     {
+        if (YII_DEBUG === true) {
+            return;
+        }
+
         $line = $config[self::RAW_LINE] ?? PHP_EOL;
         if ($line === PHP_EOL) {
             return;

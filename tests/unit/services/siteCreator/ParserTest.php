@@ -6,6 +6,8 @@ use app\services\siteCreator\Parser;
 
 class ParserTest extends \Codeception\Test\Unit
 {
+    private const URL = 'https://www.thrillist.com/travel/nation/the-most-beautiful-building-in-every-state';
+
     /**
      * @var Parser
      */
@@ -22,7 +24,7 @@ class ParserTest extends \Codeception\Test\Unit
         $this->parser->getImageParser()->setDomain('beautiful-buildings.loc');
         $content = $this
             ->parser
-            ->parseSiteContent('https://www.creativebloq.com/architecture/famous-buildings-around-world-10121105')
+            ->parseSiteContent(self::URL)
         ;
         $this->assertNotNull($content);
         // todo images assertions and content checks to add
