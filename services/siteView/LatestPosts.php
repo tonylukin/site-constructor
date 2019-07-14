@@ -17,6 +17,7 @@ class LatestPosts
     {
         $query = Page::find()
             ->with('images')
+            ->published()
             ->orderBy(['id' => SORT_DESC])
             ->limit(self::POST_COUNT)
         ;

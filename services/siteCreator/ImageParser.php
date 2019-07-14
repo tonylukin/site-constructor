@@ -5,6 +5,7 @@ namespace app\services\siteCreator;
 use creocoder\flysystem\LocalFilesystem;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use Imagine\Imagick\Imagine;
 use PHPHtmlParser\Dom\HtmlNode;
 use yii\imagine\Image;
 
@@ -53,6 +54,7 @@ class ImageParser
      */
     public function __construct()
     {
+//        Image::setImagine(new Imagine());
         $this->fs = \Yii::$app->fs;
     }
 
@@ -62,6 +64,7 @@ class ImageParser
      */
     public function parse(HtmlNode $domBody, string $url): void
     {
+        \ini_set('memory_limit', '1024M');
         $this->images = [];
         $this->maxSizeImage = null;
         $imageUrl = null;

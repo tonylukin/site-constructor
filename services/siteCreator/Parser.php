@@ -91,7 +91,7 @@ class Parser
 
         /** @var Dom\HtmlNode $domTitle */
         $domTitle = $dom->find('head title')[0];
-        $this->title = $domTitle->text();
+        $this->title = $domTitle !== null ? $domTitle->text() : '';
 
         $this->imageParser->parse($domBody, $url);
 

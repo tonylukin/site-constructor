@@ -13,14 +13,17 @@ use yii\db\Expression;
  */
 class PageQuery extends ActiveQuery
 {
-    public function init()
+    /**
+     * @return PageQuery
+     */
+    public function published(): self
     {
         $this->andWhere([
             '<=',
             'page.publish_date',
             new Expression('NOW()')
         ]);
-        parent::init();
+        return $this;
     }
 
     /**

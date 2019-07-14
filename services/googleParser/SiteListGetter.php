@@ -82,9 +82,14 @@ class SiteListGetter
 
         $siteUrlsList = \array_unique($siteUrlsList);
 
+        if ($startPage === 10) {
+            return $siteUrlsList;
+        }
+
+        \sleep(10);
         return \array_merge(
             $siteUrlsList,
-            $startPage === 10 ? [] : $this->getSearchList($queryWords, $startPage + 1)
+            $this->getSearchList($queryWords, $startPage + 1)
         );
     }
 
