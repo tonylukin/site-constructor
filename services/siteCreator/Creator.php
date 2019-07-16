@@ -88,10 +88,13 @@ class Creator
             $isNewRecord = $page->isNewRecord;
 
             $this->parser->getImageParser()->setDomain($domain);
+            \Yii::warning("Sending request to '{$url}'", 'parser');
             $content = $this->parser->parseSiteContent($url);
             if ($content === null) {
+                \Yii::warning("Skip site '{$url}'", 'parser');
                 continue;
             }
+
             $page->title = $this->parser->getTitle();
             $page->keywords = $this->parser->getKeywords();
             $page->description = $this->parser->getDescription();

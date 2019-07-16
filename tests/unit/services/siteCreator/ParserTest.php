@@ -6,7 +6,7 @@ use app\services\siteCreator\Parser;
 
 class ParserTest extends \Codeception\Test\Unit
 {
-    private const URL = 'https://www.thrillist.com/travel/nation/the-most-beautiful-building-in-every-state';
+    private const URL = 'https://www.aldergrovestar.com/opinion/letter-save-buildings-with-real-historical-value-in-fort-langley/';
 
     /**
      * @var Parser
