@@ -10,10 +10,6 @@ use yii\helpers\Inflector;
 
 class Creator
 {
-    private $queries = [
-        'beautiful-buildings.loc' => 'beautiful buildings',
-    ];
-
     /**
      * @var SiteListGetter
      */
@@ -66,6 +62,11 @@ class Creator
     public function create(string $domain, string $query): void
     {
         $urlList = $this->siteListGetter->getSearchList($query);
+        if (empty($urlList)) {
+            \Yii::warning('No URLs were found', Parser::LOGGER_PREFIX);
+            return;
+        }
+        $urlList = \array_splice($urlList, \Yii::$app->cache->get($this->getPositionCacheKey($domain)) ?: 0);
 
         $site = Site::find()->byWordOrDomain($query, $domain)->one();
         if ($site === null) {
@@ -81,6 +82,10 @@ class Creator
 
         $pages = Page::find()->bySourceUrls($urlList)->indexBy('source_url')->all();
         foreach ($urlList as $i => $url) {
+            if (!\Yii::$app->cache->set($this->getPositionCacheKey($domain), $i)) {
+                \Yii::warning("Could not save position: {$i}", Parser::LOGGER_PREFIX);
+            }
+
             $page = $pages[$url] ?? null;
             if ($page === null) {
                 $page = new Page();
@@ -88,10 +93,10 @@ class Creator
             $isNewRecord = $page->isNewRecord;
 
             $this->parser->getImageParser()->setDomain($domain);
-            \Yii::warning("Sending request to '{$url}'", 'parser');
+            \Yii::warning("Sending request to '{$url}'", Parser::LOGGER_PREFIX);
             $content = $this->parser->parseSiteContent($url);
             if ($content === null) {
-                \Yii::warning("Skip site '{$url}'", 'parser');
+                \Yii::warning("Skip site '{$url}'", Parser::LOGGER_PREFIX);
                 continue;
             }
 
@@ -124,7 +129,7 @@ class Creator
                             if ($image->save()) {
                                 $this->imagesSavedCount++;
                             } else {
-                                \Yii::error(\implode('; ', $image->getErrorSummary(true)), 'parser');
+                                \Yii::error(\implode('; ', $image->getErrorSummary(true)), Parser::LOGGER_PREFIX);
                             }
                         }
                     }
@@ -134,18 +139,20 @@ class Creator
                         $this->updatedPagesCount++;
                     }
                 } else {
-                    \Yii::error(\implode('; ', $page->getErrorSummary(true)), 'parser');
+                    \Yii::error(\implode('; ', $page->getErrorSummary(true)), Parser::LOGGER_PREFIX);
                 }
 
                 $transaction->commit();
 
             } catch (\Throwable $e) {
-                \Yii::error($e->getMessage(), 'parser');
+                \Yii::error($e->getMessage(), Parser::LOGGER_PREFIX);
                 if ($transaction->isActive) {
                     $transaction->rollBack();
                 }
             }
         }
+
+        \Yii::$app->cache->delete($this->getPositionCacheKey($domain));
     }
 
     /**
@@ -178,5 +185,14 @@ class Creator
     public function getUpdatedPagesCount(): int
     {
         return $this->updatedPagesCount;
+    }
+
+    /**
+     * @param string $domain
+     * @return string
+     */
+    private function getPositionCacheKey(string $domain): string
+    {
+        return __METHOD__ . '::' . $domain;
     }
 }

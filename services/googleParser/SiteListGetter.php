@@ -2,10 +2,12 @@
 
 namespace app\services\googleParser;
 
+use app\services\siteCreator\Parser;
 use GuzzleHttp\Client;
 
 class SiteListGetter
 {
+    private const REQUEST_DELAY = 10;
     private const GOOGLE_URL = 'https://www.google.co.uk/search?q={query}&num={number}&start={start}';
 
     private const SITE_BLACK_LIST = [
@@ -21,6 +23,11 @@ class SiteListGetter
      * @var int
      */
     private $searchResultNumber = 100;
+
+    /**
+     * @var int
+     */
+    private $maxResultPage = 10;
 
     /**
      * @var Client
@@ -40,21 +47,27 @@ class SiteListGetter
 
     /**
      * @param string $queryWords
-     * @param int $startPage
+     * @param int $currentPage
      * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getSearchList(string $queryWords, int $startPage = 1): array
+    public function getSearchList(string $queryWords, int $currentPage = 1): array
     {
+        $siteUrlsList = \Yii::$app->cache->get($this->getResultsCacheKey($queryWords));
+        if ($siteUrlsList !== false) {
+            return $siteUrlsList;
+        }
+
         $googleUrl = \str_replace(
             ['{query}', '{number}', '{start}'],
-            [\urlencode($queryWords), $this->searchResultNumber, $this->searchResultNumber * ($startPage - 1)],
+            [\urlencode($queryWords), $this->searchResultNumber, $this->searchResultNumber * ($currentPage - 1)],
             self::GOOGLE_URL
         );
         try {
             $response = $this->client->request('GET', $googleUrl);
+
         } catch (\Throwable $e) {
-            \Yii::error(__METHOD__ . ": Guzzle exception: {$e->getMessage()}");
+            \Yii::error(__METHOD__ . ": Guzzle exception: {$e->getMessage()}", Parser::LOGGER_PREFIX);
             return [];
         }
 
@@ -82,15 +95,28 @@ class SiteListGetter
 
         $siteUrlsList = \array_unique($siteUrlsList);
 
-        if ($startPage === 10) {
+        // empty page
+        if (\count($siteUrlsList) === 1) {
+            $this->maxResultPage = $currentPage;
+            \Yii::error("Max pages for '{$queryWords}' is {$currentPage}");
+            return [];
+        }
+
+        if ($currentPage >= $this->maxResultPage) {
             return $siteUrlsList;
         }
 
-        \sleep(10);
-        return \array_merge(
+        \sleep(self::REQUEST_DELAY);
+        $siteUrlsList = \array_merge(
             $siteUrlsList,
-            $this->getSearchList($queryWords, $startPage + 1)
+            $this->getSearchList($queryWords, $currentPage + 1)
         );
+
+        if ($currentPage === 1
+            && !\Yii::$app->cache->set($this->getResultsCacheKey($queryWords), $siteUrlsList, 3600 * 24 * 7)) {
+            \Yii::warning('Could not store result array', Parser::LOGGER_PREFIX);
+        }
+        return $siteUrlsList;
     }
 
     /**
@@ -101,6 +127,25 @@ class SiteListGetter
     {
         $this->searchResultNumber = $searchResultNumber;
         return $this;
+    }
+
+    /**
+     * @param int $maxResultPage
+     * @return SiteListGetter
+     */
+    public function setMaxResultPage(int $maxResultPage): SiteListGetter
+    {
+        $this->maxResultPage = $maxResultPage;
+        return $this;
+    }
+
+    /**
+     * @param string $queryWords
+     * @return string
+     */
+    private function getResultsCacheKey(string $queryWords): string
+    {
+        return __METHOD__ . '::' . $queryWords;
     }
 
     /**

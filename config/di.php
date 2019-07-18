@@ -40,5 +40,8 @@ return [
     ],
     \app\services\siteCreator\CreatorConfig::class => [
         'class' => \app\services\siteCreator\CreatorConfig::class
+    ],
+    \app\services\siteCreator\CreatingProcessManager::class => [
+        'class' => \app\services\siteCreator\CreatingProcessManager::class
     ]
 ];

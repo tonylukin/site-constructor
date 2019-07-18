@@ -28,6 +28,7 @@ class ImageParser
 
     public const IMAGE_URL_KEY = 0;
     public const IMAGE_FILENAME_KEY = 1;
+    public const LOGGER_PREFIX = 'image-parser';
 
     /**
      * @var LocalFilesystem
@@ -54,7 +55,7 @@ class ImageParser
      */
     public function __construct()
     {
-//        Image::setImagine(new Imagine());
+//        Image::setImagine(new Imagine()); // todo install on ubuntu imagick
         $this->fs = \Yii::$app->fs;
     }
 
@@ -64,7 +65,7 @@ class ImageParser
      */
     public function parse(HtmlNode $domBody, string $url): void
     {
-        \ini_set('memory_limit', '1024M');
+        \ini_set('memory_limit', YII_DEBUG === true ? '2048M' : '1024M');
         $this->images = [];
         $this->maxSizeImage = null;
         $imageUrl = null;
@@ -127,7 +128,7 @@ class ImageParser
             try {
                 $imageExtension = self::ALLOWED_IMAGES[\exif_imagetype($imageUrl)] ?? null;
             } catch (\Throwable $e) {
-                \Yii::error("Error on getting image ext: {$e->getMessage()}", 'image-parser');
+                \Yii::error("Error on getting image ext: {$e->getMessage()}", self::LOGGER_PREFIX);
                 return null;
             }
         }
@@ -145,12 +146,12 @@ class ImageParser
                     $image = $this->createFromSource($this->removeHttps($imageUrl));
 
                 } catch (\Throwable $e) {
-                    \Yii::error("Error on creating image object from the URL: {$e->getMessage()}", 'image-parser');
+                    \Yii::error("Error on creating image object from the URL [code is 35]: {$e->getMessage()}", self::LOGGER_PREFIX);
                     return null;
                 }
 
             } else {
-                \Yii::error("Error on creating image object from the URL: {$e->getMessage()}", 'image-parser');
+                \Yii::error("Error on creating image object from the URL: {$e->getMessage()}", self::LOGGER_PREFIX);
                 return null;
             }
         }
@@ -173,7 +174,15 @@ class ImageParser
         $fileName = $filePath . DIRECTORY_SEPARATOR . \md5($imageSource) . '.' . $imageExtension;
         $this->fs->createDir($filePath);
 
-        $image->save(\Yii::getAlias('@app') . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . $fileName);
+        try {
+            $image->save(\Yii::getAlias('@app') . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . $fileName);
+
+        } catch (\Throwable $e) {
+            \Yii::error(__METHOD__ . " : Exception : {$e->getMessage()}", self::LOGGER_PREFIX);
+            \Yii::warning("Skip image: {$imageSource}", self::LOGGER_PREFIX);
+            return;
+        }
+
         $this->images[] = [
             self::IMAGE_URL_KEY => $imageSource,
             self::IMAGE_FILENAME_KEY => $fileName,

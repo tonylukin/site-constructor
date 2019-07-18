@@ -9,6 +9,7 @@ use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 class Parser
 {
     private const CONTENT_MIN_LENGTH = 500;
+    public const LOGGER_PREFIX = 'parser';
 
     /**
      * @var Client
@@ -67,7 +68,7 @@ class Parser
         try {
             $response = $this->client->request('GET', $url);
         } catch (\Throwable $e) {
-            \Yii::error(__METHOD__ . ": Guzzle exception: {$e->getMessage()}", 'parser');
+            \Yii::error(__METHOD__ . ": Guzzle exception: {$e->getMessage()}", self::LOGGER_PREFIX);
             return null;
         }
 
@@ -78,14 +79,14 @@ class Parser
         /** @var Dom\HtmlNode $domBody */
         $domBody = $dom->find('body')[0];
         if ($domBody === null) {
-            \Yii::error('DOM body is null', 'parser');
+            \Yii::error('DOM body is null', self::LOGGER_PREFIX);
             return null;
         }
 
         try {
             $html = $domBody->innerHtml();
         } catch (UnknownChildTypeException $e) {
-            \Yii::error("UnknownChildTypeException: {$e->getMessage()}", 'parser');
+            \Yii::error("UnknownChildTypeException: {$e->getMessage()}", self::LOGGER_PREFIX);
             return null;
         }
 
