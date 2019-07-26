@@ -55,7 +55,9 @@ class ImageParser
      */
     public function __construct()
     {
-//        Image::setImagine(new Imagine()); // todo install on ubuntu imagick
+        if (!YII_DEBUG) {
+            Image::setImagine(new Imagine()); // install on ubuntu imagick
+        }
         $this->fs = \Yii::$app->fs;
     }
 

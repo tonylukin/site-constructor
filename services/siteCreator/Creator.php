@@ -125,7 +125,7 @@ class Creator
                             $image = new Image();
                             $image->page_id = $page->id;
                             $image->source = $imageFilename;
-                            $image->original_url = $imageUrl;
+                            $image->original_url = \substr($imageUrl, 0, 255);
                             if ($image->save()) {
                                 $this->imagesSavedCount++;
                             } else {
