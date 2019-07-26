@@ -129,7 +129,7 @@ class Creator
                             if ($image->save()) {
                                 $this->imagesSavedCount++;
                             } else {
-                                \Yii::error(\implode('; ', $image->getErrorSummary(true)), Parser::LOGGER_PREFIX);
+                                \Yii::error('Could not save image: ' . \implode('; ', $image->getErrorSummary(true)), ImageParser::LOGGER_PREFIX);
                             }
                         }
                     }

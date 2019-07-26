@@ -74,8 +74,8 @@ class ImageParser
         /** @var HtmlNode[] $images */
         $images = $domBody->find('img');
         foreach ($images as $img) {
-            if (($imageData = $this->parseImageByUrl($imageUrl = $img->getAttribute('src'), $url)) === null
-                && ($imageData = $this->parseImageByUrl($imageUrl = $img->getAttribute('data-src'), $url)) === null) {
+            if (($imageData = $this->parseImageByUrl($imageUrl = $img->getAttribute('data-src'), $url)) === null
+                && ($imageData = $this->parseImageByUrl($imageUrl = $img->getAttribute('src'), $url)) === null) {
                 continue;
             }
 
@@ -97,7 +97,7 @@ class ImageParser
         }
 
         // finally save the biggest image if nothing was saved within the loop
-        if ($this->maxSizeImage !== null) {
+        if ($this->maxSizeImage !== null && $this->maxSizeImage[0] > 10000) {
             $this->maxSizeImage[1]->resize(new Box(self::IMAGE_WIDTH_MAX, self::IMAGE_HEIGHT_MAX));
             $this->saveImage($this->maxSizeImage[1], $this->maxSizeImage[2], $this->maxSizeImage[3]);
         }
@@ -122,6 +122,21 @@ class ImageParser
             return null;
         }
 
+        // first try to get image from raw image url
+        $image = null;
+        $imageUrl = \htmlspecialchars_decode($imageUrl);
+        try {
+            $image = $this->createFromSource($imageUrl);
+
+        } catch (\Throwable $e) {
+            \Yii::warning("Error on creating image object from the URL '{$imageUrl}' [RAW image url]: {$e->getMessage()}", self::LOGGER_PREFIX);
+        }
+        if ($image !== null) {
+            $imageExtension = \pathinfo($this->normalizeImageUrl($imageUrl), PATHINFO_EXTENSION);
+            return [$image, $imageExtension];
+        }
+
+        // then try to remove GET params from URL
         $imageUrl = $this->normalizeImageUrl($imageUrl);
         $imageExtension = \pathinfo($imageUrl, PATHINFO_EXTENSION);
         if (!$imageExtension) {
@@ -146,12 +161,12 @@ class ImageParser
                     $image = $this->createFromSource($this->removeHttps($imageUrl));
 
                 } catch (\Throwable $e) {
-                    \Yii::error("Error on creating image object from the URL [code is 35]: {$e->getMessage()}", self::LOGGER_PREFIX);
+                    \Yii::error("Error on creating image object from the URL '{$imageUrl}' [code is 35]: {$e->getMessage()}", self::LOGGER_PREFIX);
                     return null;
                 }
 
             } else {
-                \Yii::error("Error on creating image object from the URL: {$e->getMessage()}", self::LOGGER_PREFIX);
+                \Yii::error("Error on creating image object from the URL '{$imageUrl}': {$e->getMessage()}", self::LOGGER_PREFIX);
                 return null;
             }
         }
@@ -233,6 +248,13 @@ class ImageParser
 
         $scheme = \parse_url($url, PHP_URL_SCHEME);
         $host = \parse_url($url, PHP_URL_HOST);
+
+        // for URLs like //assets3.*.com/v1/image/1631743/size/tmg-article_default_mobile;jpeg_quality=20.jpg
+        if ($imageUrl[0] . $imageUrl[1] === '//') {
+            return "http:{$imageUrl}"; // better for now
+            return "{$scheme}:{$imageUrl}";
+        }
+
         return "{$scheme}://{$host}{$imageUrl}";
     }
 
