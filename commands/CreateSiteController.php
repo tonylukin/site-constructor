@@ -85,14 +85,14 @@ class CreateSiteController extends Controller
             } catch (\Throwable $e) {
                 $this->creatingProcessManager->setProcessFinished();
                 \Yii::error($e->getMessage(), Parser::LOGGER_PREFIX);
-                $this->stdout($e->getMessage());
+                $this->stdout(\date('d.m.Y H:i') . " :: {$e->getMessage()}" . PHP_EOL);
                 return ExitCode::UNSPECIFIED_ERROR;
             }
             $this->creatorConfig->removeConfig($config);
         }
 
         $this->creatingProcessManager->setProcessFinished();
-        $this->stdout("New sites: {$this->creator->getNewSitesCount()}, new pages: {$this->creator->getNewPagesCount()}, updated pages: {$this->creator->getUpdatedPagesCount()}, new images: {$this->creator->getImagesSavedCount()}");
+        $this->stdout(\date('d.m.Y H:i') . " :: New sites: {$this->creator->getNewSitesCount()}, new pages: {$this->creator->getNewPagesCount()}, updated pages: {$this->creator->getUpdatedPagesCount()}, new images: {$this->creator->getImagesSavedCount()}" . PHP_EOL);
         return ExitCode::OK;
     }
 }
