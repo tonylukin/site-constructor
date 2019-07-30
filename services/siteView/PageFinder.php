@@ -14,9 +14,13 @@ class PageFinder
      */
     public function findByUrl(string $url): ?Page
     {
-        $query = Page::find()->with('site')->byHost();
+        $query = Page::find()
+            ->with('images', 'site')
+            ->published()
+            ->byHost()
+        ;
         if ($url === '') {
-            $query->orderBy(['id' => SORT_ASC]);
+            $query->orderBy(['page.id' => SORT_DESC]);
         } else {
             $query->andWhere(['page.url' => $url]);
         }
