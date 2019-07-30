@@ -18,11 +18,12 @@ class LatestPosts
         $query = Page::find()
             ->with('images')
             ->published()
-            ->orderBy(['id' => SORT_DESC])
+            ->orderBy(['page.id' => SORT_DESC])
+            ->byHost()
             ->limit(self::POST_COUNT)
         ;
         if ($page !== null) {
-            $query->andWhere('id != :id', [':id' => $page->id]);
+            $query->andWhere('page.id != :id', [':id' => $page->id]);
         }
         if (!YII_DEBUG) {
             $query->cache(self::CACHE_DURATION);

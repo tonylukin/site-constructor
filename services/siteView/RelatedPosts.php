@@ -39,8 +39,9 @@ class RelatedPosts
         $query = Page::find()
             ->with('images')
             ->published()
-            ->andWhere(['id' => $this->getRelatedIds((int) $page->id)])
-            ->orderBy(['id' => SORT_ASC])
+            ->byHost()
+            ->andWhere(['page.id' => $this->getRelatedIds((int) $page->id)])
+            ->orderBy(['page.id' => SORT_ASC])
             ->limit(self::POST_COUNT)
         ;
         if (!YII_DEBUG) {
