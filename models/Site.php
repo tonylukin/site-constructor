@@ -18,6 +18,8 @@ use yii\db\ActiveRecord;
  */
 class Site extends ActiveRecord
 {
+    private const CACHE_DURATION = 3600 * 24 * 30; // 30 days
+
     /**
      * {@inheritdoc}
      */
@@ -67,5 +69,18 @@ class Site extends ActiveRecord
     public static function find()
     {
         return new SiteQuery(static::class);
+    }
+
+    /**
+     * @return Site|null
+     */
+    public static function getCurrentSite(): ?self
+    {
+        $site = self::find()->byDomain(\Yii::$app->request->hostName);
+
+        if (!YII_DEBUG) {
+            $site->cache(self::CACHE_DURATION);
+        }
+        return $site->one();
     }
 }

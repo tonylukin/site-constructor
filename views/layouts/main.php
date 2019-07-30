@@ -4,16 +4,11 @@
 
 /* @var $content string */
 
-use app\widgets\Alert;
-use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use yii\helpers\Html;
 
 AppAsset::register($this);
-/** @var \app\models\Page $page */
-$page = \Yii::$app->params['page'];
+$site = \app\models\Site::getCurrentSite();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -197,7 +192,7 @@ $page = \Yii::$app->params['page'];
     </style>
 
     <?php $this->registerCsrfMetaTags() ?>
-    <title><?= Html::encode($this->title) . ' - ' . \ucwords($page->site->search_word) ?></title>
+    <title><?= Html::encode($this->title) . ' - ' . \ucwords($site->search_word) ?></title>
     <?php $this->head() ?>
 </head>
 <body class="post-template-default single single-post postid-146 single-format-standard buzznews-right-sidebar buzznews-header-one buzznews-theme-boxlayot">
@@ -213,9 +208,9 @@ $page = \Yii::$app->params['page'];
                     <strong class="sb-logo">
                         <div class="site-branding">
                             <h1 class="site-title">
-                                <a href="/" rel="home"><?= $page->site->search_word ?></a>
+                                <a href="/" rel="home"><?= $site->search_word ?></a>
                             </h1>
-                            <p class="site-description">Just another <?= $page->site->search_word ?> site</p>
+                            <p class="site-description">Just another <?= $site->search_word ?> site</p>
                         </div><!-- .site-branding -->
                     </strong>
                 </div>
@@ -310,52 +305,8 @@ $page = \Yii::$app->params['page'];
                                 <div class="buzznews-trendingnews-outer-wrapper">
                                     <div class="buzznews-trendingnews-inner-wrapper">
                                         <div class="buzznews-trendingnews-left">
-                                            <article itemtype="https://schema.org/CreativeWork" itemscope="itemscope"
-                                                     id="post-<?= $page->id ?>"
-                                                     class="post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+                                            <?= $content ?>
 
-                                                <header class="entry-header">
-                                                    <h1 class="entry-title"><?= $page->title ?></h1>
-                                                    <?php if ($page->publish_date) { ?>
-                                                    <div class="entry-meta">
-                                                        <span class="posted-on">Posted on <?= (new \DateTime($page->publish_date))->format('F d, Y') ?></span>
-                                                    </div>
-                                                    <?php } ?>
-                                                </header><!-- .entry-header -->
-
-                                                <?php if (!empty($page->images)) { ?>
-                                                <div class="post-thumbnail">
-                                                    <img src="<?= $page->images[0]->getSourceUrl() ?>"
-                                                         class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
-                                                         alt="<?= $page->title ?>">
-                                                </div>
-                                                <?php } ?>
-                                                <!-- .post-thumbnail -->
-
-
-                                                <div class="entry-content">
-                                                    <?= $content ?>
-                                                </div>
-
-                                                <nav class="navigation post-navigation" role="navigation">
-                                                    <h2 class="screen-reader-text">Post navigation</h2>
-                                                    <div class="nav-links">
-                                                        <?php if ($prevPage = $page->getPrevPage()) { ?>
-                                                        <div class="nav-previous">
-                                                            <a href="<?= \yii\helpers\Url::to(['page/index', 'url' => $prevPage->url]) ?>"
-                                                                    rel="prev"><span>Previous article</span> <?= $prevPage->title ?></a>
-                                                        </div>
-                                                        <?php } ?>
-                                                        <?php if ($nextPage = $page->getNextPage()) { ?>
-                                                        <div class="nav-previous">
-                                                            <a href="<?= \yii\helpers\Url::to(['page/index', 'url' => $nextPage->url]) ?>"
-                                                                    rel="next"><span>Next article</span> <?= $nextPage->title ?></a>
-                                                        </div>
-                                                        <?php } ?>
-                                                    </div>
-                                                </nav>
-                                            </article>
-                                            <div class="buzznews-infinite-scrolling-post"></div>
                                             <!--HERE GOOGLE ADS-->
                                         </div>
                                     </div>
@@ -384,7 +335,7 @@ $page = \Yii::$app->params['page'];
                 <div class="sb-footer-copyright">
                     <div class="site-info">
                         <a target="_blank" class="right" href="/">
-                            <?= $page->site->search_word ?> <?= date('Y') ?>
+                            <?= $site->search_word ?> <?= \date('Y') ?>
                         </a>
                     </div>
                 </div>

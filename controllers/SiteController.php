@@ -48,7 +48,7 @@ class SiteController extends Controller
         return [
             'error' => [
                 'class' => ErrorAction::class,
-                'layout' => 'default'
+                'layout' => 'main'
             ],
             'captcha' => [
                 'class' => CaptchaAction::class,
