@@ -303,7 +303,7 @@ $page = \Yii::$app->params['page'];
         <!-- ht-banner -->
         <div class="sb-wrapper">
             <div class="sb-main-container-wrapper">
-                <div class="container">
+                <div class="container clearfix">
                     <div id="primary" class="content-area">
                         <main id="main" class="site-main">
                             <div class="buzznews-trendingnews">
