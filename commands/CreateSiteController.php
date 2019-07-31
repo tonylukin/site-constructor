@@ -86,7 +86,7 @@ class CreateSiteController extends Controller
                 $this->creatingProcessManager->setProcessFinished();
                 \Yii::error($e->getTraceAsString(), Parser::LOGGER_PREFIX);
                 $this->stdout(\date('d.m.Y H:i') . " :: Error: {$e->getMessage()}" . PHP_EOL);
-                continue;
+                return ExitCode::UNSPECIFIED_ERROR;
             }
 
             $this->creatorConfig->removeConfig($config);
