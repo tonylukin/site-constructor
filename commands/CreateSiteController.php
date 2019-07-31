@@ -8,8 +8,8 @@ use app\services\siteCreator\Creator;
 use app\services\siteCreator\CreatorConfig;
 use app\services\siteCreator\Parser;
 use yii\base\Module;
-use yii\console\Controller;
 use yii\console\ExitCode;
+use yii\helpers\Console;
 
 class CreateSiteController extends Controller
 {
@@ -69,7 +69,7 @@ class CreateSiteController extends Controller
     public function actionIndex(int $urlCount = null): int
     {
         if ($this->creatingProcessManager->isProcessInProgress()) {
-            $this->stdout('Process is already started');
+            $this->writeLog('Process is already started');
             return ExitCode::OK;
         }
 
@@ -85,7 +85,7 @@ class CreateSiteController extends Controller
             } catch (\Throwable $e) {
                 $this->creatingProcessManager->setProcessFinished();
                 \Yii::error($e->getTraceAsString(), Parser::LOGGER_PREFIX);
-                $this->stdout(\date('d.m.Y H:i') . " :: Error: {$e->getMessage()}" . PHP_EOL);
+                $this->writeLog("Error: {$e->getMessage()}");
                 return ExitCode::UNSPECIFIED_ERROR;
             }
 
@@ -93,7 +93,7 @@ class CreateSiteController extends Controller
         }
 
         $this->creatingProcessManager->setProcessFinished();
-        $this->stdout(\date('d.m.Y H:i') . " :: New sites: {$this->creator->getNewSitesCount()}, new pages: {$this->creator->getNewPagesCount()}, updated pages: {$this->creator->getUpdatedPagesCount()}, new images: {$this->creator->getImagesSavedCount()}" . PHP_EOL);
+        $this->writeLog("New sites: {$this->creator->getNewSitesCount()}, new pages: {$this->creator->getNewPagesCount()}, updated pages: {$this->creator->getUpdatedPagesCount()}, new images: {$this->creator->getImagesSavedCount()}");
         return ExitCode::OK;
     }
 }
