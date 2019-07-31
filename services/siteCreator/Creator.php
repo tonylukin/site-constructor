@@ -94,20 +94,26 @@ class Creator
 
             $this->parser->getImageParser()->setDomain($domain);
             \Yii::warning("Sending request to '{$url}'", Parser::LOGGER_PREFIX);
-            $content = $this->parser->parseSiteContent($url);
-            if ($content === null) {
-                \Yii::warning("Skip site '{$url}'", Parser::LOGGER_PREFIX);
+            try {
+                $content = $this->parser->parseSiteContent($url);
+                if ($content === null) {
+                    \Yii::warning("Skip site '{$url}'", Parser::LOGGER_PREFIX);
+                    continue;
+                }
+
+                $page->title = $this->parser->getTitle();
+                $page->keywords = $this->parser->getKeywords();
+                $page->description = $this->parser->getDescription();
+                $page->site_id = $site->id;
+                $page->content = $content;
+                $page->source_url = $url;
+                $page->url = Inflector::slug($page->title);
+                $page->setPageIndex($i);
+
+            } catch (\Throwable $e) {
+                \Yii::error("Parse content error [{$url}]: {$e->getMessage()}", Parser::LOGGER_PREFIX);
                 continue;
             }
-
-            $page->title = $this->parser->getTitle();
-            $page->keywords = $this->parser->getKeywords();
-            $page->description = $this->parser->getDescription();
-            $page->site_id = $site->id;
-            $page->content = $content;
-            $page->source_url = $url;
-            $page->url = Inflector::slug($page->title);
-            $page->setPageIndex($i);
 
             $transaction = \Yii::$app->db->beginTransaction();
             try {
