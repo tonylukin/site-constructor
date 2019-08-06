@@ -20,7 +20,7 @@ class PageFinder
             ->byHost()
         ;
         if ($url === '') {
-            $query->orderBy(['page.id' => SORT_DESC]);
+            $query->orderBy(['page.publish_date' => SORT_DESC]);
         } else {
             $query->andWhere(['page.url' => $url]);
         }

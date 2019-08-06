@@ -41,7 +41,7 @@ class RelatedPosts
             ->published()
             ->byHost()
             ->andWhere(['page.id' => $this->getRelatedIds((int) $page->id)])
-            ->orderBy(['page.id' => SORT_ASC])
+            ->orderBy(['page.publish_date' => SORT_DESC])
             ->limit(self::POST_COUNT)
         ;
         if (!YII_DEBUG) {
