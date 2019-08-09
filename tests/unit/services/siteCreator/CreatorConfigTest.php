@@ -15,6 +15,7 @@ class CreatorConfigTest extends \Codeception\Test\Unit
             self::FILENAME
         ]);
         \file_put_contents($filePath, <<<TEXT
+# Some shit here
 big-buildings.loc,big buildings
 small-dicks.loc
 

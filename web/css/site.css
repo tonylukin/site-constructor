@@ -113,11 +113,55 @@ a.desc:after {
     outline: none;
 }
 
+#page {
+    background: #fff;
+}
+
+/* Specific styles */
 body {
-    background: url("../images/tex2res1.png") fixed;
+    background-attachment: fixed;
     /*background: url("../images/natural_paper.png") fixed;*/
 }
 
-#page {
-    background: #fff;
+body.blue {
+    background-image: url("../images/tex2res1.png");
+}
+body.red {
+    background-image: url("../images/interlaced.png");
+}
+body.yellow {
+    background-image: url("../images/united-squares.png");
+}
+body.white {
+    background-image: url("../images/united-squares-negative.png");
+}
+body.black {
+    background-image: url("../images/floor-tile.png");
+}
+body.brown {
+    background-image: url("../images/circuit.png");
+}
+body.green {
+    background-image: url("../images/morocco.png");
+}
+body.silver {
+    background-image: url("../images/crossline-dots.png");
+}
+body.gold {
+    background-image: url("../images/light-grey-terrazzo.png");
+}
+body.fired {
+    background-image: url("../images/sun-pattern.png");
+}
+body.bread {
+    background-image: url("../images/funky-lines.png");
+}
+body.crew {
+    background-image: url("../images/intersection.png");
+}
+body.lighten {
+    background-image: url("../images/regal.png");
+}
+body.aired {
+    background-image: url("../images/wormz.png");
 }

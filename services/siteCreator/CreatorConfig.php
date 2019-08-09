@@ -5,6 +5,7 @@ namespace app\services\siteCreator;
 class CreatorConfig
 {
     private const DEFAULT_FILENAME = 'site-creator.config';
+    private const COMMENT_SYMBOL = '#';
 
     private const RAW_LINE = 'rawLine';
     public const DOMAIN = 'domain';
@@ -31,6 +32,10 @@ class CreatorConfig
 
         $output = [];
         foreach ($lines as $line) {
+            if ($line[0] === self::COMMENT_SYMBOL) {
+                continue;
+            }
+
             $data = \array_map('trim', \explode(',', $line));
             $domain = $data[0] ?? '';
             $query = $data[1] ?? '';

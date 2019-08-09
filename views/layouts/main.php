@@ -195,7 +195,7 @@ $site = \app\models\Site::getCurrentSite();
     <title><?= Html::encode($this->title) . ' - ' . \ucwords($site->search_word) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="post-template-default single single-post postid-146 single-format-standard buzznews-right-sidebar buzznews-header-one buzznews-theme-boxlayot">
+<body class="<?= $site->body_class ?> post-template-default single single-post postid-146 single-format-standard buzznews-right-sidebar buzznews-header-one buzznews-theme-boxlayot">
 <?php $this->beginBody() ?>
 
 <div id="page" class="site">
@@ -210,7 +210,7 @@ $site = \app\models\Site::getCurrentSite();
                             <h1 class="site-title">
                                 <a href="/" rel="home"><?= $site->search_word ?></a>
                             </h1>
-                            <p class="site-description">Just another <?= $site->search_word ?> site</p>
+                            <p class="site-description"><?= $site->slug ?: "Just another {$site->search_word} site" ?></p>
                         </div><!-- .site-branding -->
                     </strong>
                 </div>

@@ -14,21 +14,21 @@ class m190531_080531_init_tables extends Migration
     {
         $this->createTable('page', [
             'id' => $this->primaryKey(),
-            'title' => $this->string(),
+            'title' => $this->string()->notNull(),
             'keywords' => $this->string(),
             'description' => $this->string(),
-            'content' => $this->text(),
-            'url' => $this->string(),
-            'source_url' => $this->string(),
-            'site_id' => $this->integer(),
+            'content' => $this->text()->notNull(),
+            'url' => $this->string()->notNull(),
+            'source_url' => $this->string()->notNull(),
+            'site_id' => $this->integer()->notNull(),
             'created_at' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
         ]);
         $this->createIndex('ix_page_site_id', 'page', 'site_id');
         $this->createIndex('ix_page_source_url', 'page', 'source_url', true);
         $this->createTable('site', [
             'id' => $this->primaryKey(),
-            'search_word' => $this->string(),
-            'domain' => $this->string(),
+            'search_word' => $this->string()->notNull(),
+            'domain' => $this->string()->notNull(),
             'created_at' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
         ]);
         $this->createIndex('ix_site_domain', 'site', 'domain', true);

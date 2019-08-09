@@ -12,6 +12,8 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property string $search_word
  * @property string $domain
+ * @property string $body_class
+ * @property string $slug
  * @property string $created_at
  *
  * @property Page[] $pages
@@ -19,6 +21,36 @@ use yii\db\ActiveRecord;
 class Site extends ActiveRecord
 {
     private const CACHE_DURATION = 3600 * 24 * 30; // 30 days
+    private const BODY_CLASSES = [
+        'blue',
+        'red',
+        'yellow',
+        'white',
+        'black',
+        'brown',
+        'green',
+        'silver',
+        'gold',
+        'fired',
+        'bread',
+        'crew',
+        'lighten',
+        'aired',
+    ];
+    private const SLUGS = [
+        'Just Another {title} Site',
+        'This is all about {title}',
+        'Make us know about {title}',
+        'Wow! You need to know about {title}',
+        'What do you always wanted to know about {title}?',
+        '{title} and all about it',
+        'What to learn about {title}?',
+        'Why we did not speak about {title}',
+        'Forget all you know about {title}',
+        'All interesting about {title} here',
+        'Most things you hear are {title}',
+        'We all live with {title}',
+    ];
 
     /**
      * {@inheritdoc}
@@ -82,5 +114,16 @@ class Site extends ActiveRecord
             $site->cache(self::CACHE_DURATION);
         }
         return $site->one();
+    }
+
+    public function setSlug(): void
+    {
+        $this->slug = self::SLUGS[\array_rand(self::SLUGS)];
+        $this->slug = \str_replace('{title}', $this->search_word, $this->slug);
+    }
+
+    public function setBodyClass(): void
+    {
+        $this->body_class = self::BODY_CLASSES[\array_rand(self::BODY_CLASSES)];
     }
 }

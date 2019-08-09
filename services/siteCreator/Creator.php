@@ -10,6 +10,8 @@ use yii\helpers\Inflector;
 
 class Creator
 {
+    private const MAX_PAGES_PER_EXEC = 50;
+
     /**
      * @var SiteListGetter
      */
@@ -41,6 +43,11 @@ class Creator
     private $imagesSavedCount = 0;
 
     /**
+     * @var string
+     */
+    private $domain;
+
+    /**
      * Creator constructor.
      * @param SiteListGetter $siteListGetter
      * @param Parser $parser
@@ -61,18 +68,21 @@ class Creator
      */
     public function create(string $domain, string $query): void
     {
+        $this->domain = $domain;
         $urlList = $this->siteListGetter->getSearchList($query);
         if (empty($urlList)) {
             \Yii::warning('No URLs were found', Parser::LOGGER_PREFIX);
             return;
         }
-        $urlList = \array_splice($urlList, \Yii::$app->cache->get($this->getPositionCacheKey($domain)) ?: 0);
+        $urlList = \array_splice($urlList, \Yii::$app->cache->get($this->getPositionCacheKey()) ?: 0);
 
-        $site = Site::find()->byWordOrDomain($query, $domain)->one();
+        $site = Site::find()->byWordOrDomain($query, $this->domain)->one();
         if ($site === null) {
             $site = new Site();
             $site->search_word = $query;
-            $site->domain = $domain;
+            $site->domain = $this->domain;
+            $site->setSlug();
+            $site->setBodyClass();
 
             if (!$site->save()) {
                 throw new \Exception('Error on saving site: ' . \implode('; ', $site->getErrorSummary(true)));
@@ -81,8 +91,13 @@ class Creator
         }
 
         $pages = Page::find()->bySourceUrls($urlList)->indexBy('source_url')->all();
+        $pageCount = 0;
         foreach ($urlList as $i => $url) {
-            if (!\Yii::$app->cache->set($this->getPositionCacheKey($domain), $i)) {
+            if ($pageCount >= self::MAX_PAGES_PER_EXEC) {
+                return;
+            }
+
+            if (!\Yii::$app->cache->set($this->getPositionCacheKey(), $i)) {
                 \Yii::warning("Could not save position: {$i}", Parser::LOGGER_PREFIX);
             }
 
@@ -92,7 +107,7 @@ class Creator
             }
             $isNewRecord = $page->isNewRecord;
 
-            $this->parser->getImageParser()->setDomain($domain);
+            $this->parser->getImageParser()->setDomain($this->domain);
             \Yii::warning("Sending request to '{$url}'", Parser::LOGGER_PREFIX);
             try {
                 $content = $this->parser->parseSiteContent($url);
@@ -156,9 +171,10 @@ class Creator
                     $transaction->rollBack();
                 }
             }
+            $pageCount++;
         }
 
-        \Yii::$app->cache->delete($this->getPositionCacheKey($domain));
+        \Yii::$app->cache->delete($this->getPositionCacheKey());
     }
 
     /**
@@ -194,11 +210,10 @@ class Creator
     }
 
     /**
-     * @param string $domain
      * @return string
      */
-    private function getPositionCacheKey(string $domain): string
+    private function getPositionCacheKey(): string
     {
-        return __METHOD__ . '::' . $domain;
+        return __METHOD__ . '::' . $this->domain;
     }
 }
