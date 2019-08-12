@@ -26,9 +26,9 @@ SQL;
                 ':domain' => \Yii::$app->request->hostName
             ])
         ;
-        if (!YII_DEBUG) {
-            $query->cache(self::CACHE_DURATION);
-        }
+//        if (!YII_DEBUG) {
+//            $query->cache(self::CACHE_DURATION);
+//        }
         return $query->queryAll();
     }
 }

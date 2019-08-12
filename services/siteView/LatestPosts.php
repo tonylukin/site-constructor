@@ -25,9 +25,9 @@ class LatestPosts
         if ($page !== null) {
             $query->andWhere('page.id != :id', [':id' => $page->id]);
         }
-        if (!YII_DEBUG) {
-            $query->cache(self::CACHE_DURATION);
-        }
+//        if (!YII_DEBUG) {
+//            $query->cache(self::CACHE_DURATION);
+//        }
         return $query->all();
     }
 }
