@@ -74,7 +74,10 @@ class Creator
             \Yii::warning('No URLs were found', Parser::LOGGER_PREFIX);
             return;
         }
-        $urlList = \array_splice($urlList, \Yii::$app->cache->get($this->getPositionCacheKey()) ?: 0);
+        $positionStart = \Yii::$app->cache->get($this->getPositionCacheKey()) ?: 0;
+        \Yii::warning("Starting from position: {$positionStart}", Parser::LOGGER_PREFIX);
+        $urlList = \array_splice($urlList, $positionStart);
+        \Yii::warning('Url list count: ' . \count($urlList), Parser::LOGGER_PREFIX);
 
         $site = Site::find()->byWordOrDomain($query, $this->domain)->one();
         if ($site === null) {

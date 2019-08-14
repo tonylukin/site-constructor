@@ -56,6 +56,7 @@ class SiteListGetter
     {
         $siteUrlsList = \Yii::$app->cache->get($this->getResultsCacheKey($queryWords));
         if ($siteUrlsList !== false) {
+            \Yii::warning("Get url list from cache for '{$queryWords}'", Parser::LOGGER_PREFIX);
             return $siteUrlsList;
         }
 
@@ -77,7 +78,7 @@ class SiteListGetter
         \preg_match_all($urlPattern, $body, $urlResults);
 
         if (empty($urlResults)) {
-            \Yii::error("No links found for '{$googleUrl}'");
+            \Yii::error("No links found for '{$googleUrl}'", Parser::LOGGER_PREFIX);
             return [];
         }
 
@@ -95,6 +96,7 @@ class SiteListGetter
         }
 
         $siteUrlsList = \array_unique($siteUrlsList);
+        \Yii::warning('Url list contains ' . \count($siteUrlsList) . ' items', Parser::LOGGER_PREFIX);
 
         // empty page
         if (\count($siteUrlsList) === 1) {
@@ -104,6 +106,7 @@ class SiteListGetter
         }
 
         if ($currentPage >= $this->maxResultPage) {
+            \Yii::warning("Max page reached: {$this->maxResultPage}", Parser::LOGGER_PREFIX);
             return $siteUrlsList;
         }
 
@@ -113,10 +116,12 @@ class SiteListGetter
             $this->getSearchList($queryWords, $currentPage + 1)
         );
 
-        if ($currentPage === 1
-            && !empty($siteUrlsList)
-            && !\Yii::$app->cache->set($this->getResultsCacheKey($queryWords), $siteUrlsList, 3600 * 24 * 7)) {
-            \Yii::warning('Could not store result array', Parser::LOGGER_PREFIX);
+        if ($currentPage === 1 && !empty($siteUrlsList)) {
+            if (\Yii::$app->cache->set($this->getResultsCacheKey($queryWords), $siteUrlsList, 3600 * 24 * 7)) {
+                \Yii::warning('Total url count ' . \count($siteUrlsList) . ' stored in cache', Parser::LOGGER_PREFIX);
+            } else {
+                \Yii::warning('Could not store result array', Parser::LOGGER_PREFIX);
+            }
         }
         return $siteUrlsList;
     }
