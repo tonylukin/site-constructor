@@ -73,7 +73,7 @@ class SiteListGetter
         }
 
         $body = (string)$response->getBody();
-        $urlPattern = '/<div class=\"jfp3ef\">([\s\S]*?)\&amp\;/i';
+        $urlPattern = '/<div class=\"kCrYT\">([\s\S]*?)\&amp\;/i';
         \preg_match_all($urlPattern, $body, $urlResults);
 
         if (empty($urlResults)) {
@@ -114,6 +114,7 @@ class SiteListGetter
         );
 
         if ($currentPage === 1
+            && !empty($siteUrlsList)
             && !\Yii::$app->cache->set($this->getResultsCacheKey($queryWords), $siteUrlsList, 3600 * 24 * 7)) {
             \Yii::warning('Could not store result array', Parser::LOGGER_PREFIX);
         }
