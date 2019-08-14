@@ -84,6 +84,7 @@ class CreateSiteController extends Controller
             return ExitCode::OK;
         }
 
+        $this->writeLog('Process started with config count ' . \count($configs));
         foreach ($configs as $config) {
             try {
                 $result = $this->creator->create($config[CreatorConfig::DOMAIN], $config[CreatorConfig::SEARCH_QUERY]);
