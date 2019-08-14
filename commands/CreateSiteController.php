@@ -78,7 +78,13 @@ class CreateSiteController extends Controller
             $this->siteListGetter->setSearchResultNumber($urlCount);
         }
 
-        foreach ($this->creatorConfig->getConfigs() as $config) {
+        $configs = $this->creatorConfig->getConfigs();
+        if (empty($configs)) {
+            $this->writeLog('Config is empty');
+            return ExitCode::OK;
+        }
+
+        foreach ($configs as $config) {
             try {
                 $this->creator->create($config[CreatorConfig::DOMAIN], $config[CreatorConfig::SEARCH_QUERY]);
 
