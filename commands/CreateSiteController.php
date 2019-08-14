@@ -86,7 +86,7 @@ class CreateSiteController extends Controller
 
         foreach ($configs as $config) {
             try {
-                $this->creator->create($config[CreatorConfig::DOMAIN], $config[CreatorConfig::SEARCH_QUERY]);
+                $result = $this->creator->create($config[CreatorConfig::DOMAIN], $config[CreatorConfig::SEARCH_QUERY]);
 
             } catch (\Throwable $e) {
                 $this->creatingProcessManager->setProcessFinished();
@@ -95,7 +95,9 @@ class CreateSiteController extends Controller
                 return ExitCode::UNSPECIFIED_ERROR;
             }
 
-            $this->creatorConfig->removeConfig($config);
+            if ($result) {
+                $this->creatorConfig->removeConfig($config);
+            }
         }
 
         $this->creatingProcessManager->setProcessFinished();

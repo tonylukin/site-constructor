@@ -64,15 +64,16 @@ class Creator
     /**
      * @param string $domain
      * @param string $query
+     * @return bool
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function create(string $domain, string $query): void
+    public function create(string $domain, string $query): bool
     {
         $this->domain = $domain;
         $urlList = $this->siteListGetter->getSearchList($query);
         if (empty($urlList)) {
             \Yii::warning('No URLs were found', Parser::LOGGER_PREFIX);
-            return;
+            return false;
         }
         $positionStart = \Yii::$app->cache->get($this->getPositionCacheKey()) ?: 0;
         \Yii::warning("Starting from position: {$positionStart}", Parser::LOGGER_PREFIX);
@@ -98,7 +99,7 @@ class Creator
         foreach ($urlList as $i => $url) {
             if ($pageCount >= self::MAX_PAGES_PER_EXEC) {
                 \Yii::warning('Max page per exec reached: ' . self::MAX_PAGES_PER_EXEC, Parser::LOGGER_PREFIX);
-                return;
+                return false;
             }
 
             if (!\Yii::$app->cache->set($this->getPositionCacheKey(), $i)) {
@@ -180,6 +181,7 @@ class Creator
         }
 
         \Yii::$app->cache->delete($this->getPositionCacheKey());
+        return true;
     }
 
     /**
