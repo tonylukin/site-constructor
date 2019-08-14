@@ -94,14 +94,14 @@ class Creator
         $pageCount = 0;
         foreach ($urlList as $i => $url) {
             if ($pageCount >= self::MAX_PAGES_PER_EXEC) {
-                \Yii::info('Max page per exec reached: ' . self::MAX_PAGES_PER_EXEC, Parser::LOGGER_PREFIX);
+                \Yii::warning('Max page per exec reached: ' . self::MAX_PAGES_PER_EXEC, Parser::LOGGER_PREFIX);
                 return;
             }
 
             if (!\Yii::$app->cache->set($this->getPositionCacheKey(), $i)) {
                 \Yii::warning("Could not save position: {$i}", Parser::LOGGER_PREFIX);
             }
-            \Yii::info("Processing url: '{$url}' in set: #{$i}", Parser::LOGGER_PREFIX);
+            \Yii::warning("Processing url: '{$url}' in set: #{$i}", Parser::LOGGER_PREFIX);
 
             $page = $pages[$url] ?? null;
             if ($page === null) {
