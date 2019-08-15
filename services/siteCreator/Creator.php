@@ -80,14 +80,14 @@ class Creator
     public function create(string $domain, string $query): bool
     {
         $this->domain = $domain;
-        $urlList = $this->siteListGetter->getSearchList($query);
-        if (empty($urlList)) {
+        $fullUrlList = $this->siteListGetter->getSearchList($query);
+        if (empty($fullUrlList)) {
             \Yii::warning('No URLs were found', Parser::LOGGER_PREFIX);
             return false;
         }
         $positionStart = \Yii::$app->cache->get($this->getPositionCacheKey()) ?: 0;
         \Yii::warning("Starting from position: {$positionStart}", Parser::LOGGER_PREFIX);
-        $urlList = \array_splice($urlList, $positionStart);
+        $urlList = \array_splice($fullUrlList, $positionStart);
         \Yii::warning('Url list count: ' . \count($urlList), Parser::LOGGER_PREFIX);
 
         $site = Site::find()->byWordOrDomain($query, $this->domain)->one();
@@ -191,7 +191,7 @@ class Creator
         }
 
         \Yii::$app->cache->delete($this->getPositionCacheKey());
-        return true;
+        return $positionStart + $i + 1 >= \count($fullUrlList);
     }
 
     /**
