@@ -48,6 +48,16 @@ class Creator
     private $domain;
 
     /**
+     * @var int
+     */
+    private $pageCount = 0;
+
+    /**
+     * @var bool
+     */
+    private $pageCountLimitReached = false;
+
+    /**
      * Creator constructor.
      * @param SiteListGetter $siteListGetter
      * @param Parser $parser
@@ -95,9 +105,9 @@ class Creator
         }
 
         $pages = Page::find()->bySourceUrls($urlList)->indexBy('source_url')->all();
-        $pageCount = 0;
         foreach ($urlList as $i => $url) {
-            if ($pageCount >= self::MAX_PAGES_PER_EXEC) {
+            if ($this->pageCount >= self::MAX_PAGES_PER_EXEC) {
+                $this->pageCountLimitReached = true;
                 \Yii::warning('Max page per exec reached: ' . self::MAX_PAGES_PER_EXEC, Parser::LOGGER_PREFIX);
                 return false;
             }
@@ -177,7 +187,7 @@ class Creator
                     $transaction->rollBack();
                 }
             }
-            $pageCount++;
+            $this->pageCount++;
         }
 
         \Yii::$app->cache->delete($this->getPositionCacheKey());
@@ -214,6 +224,14 @@ class Creator
     public function getUpdatedPagesCount(): int
     {
         return $this->updatedPagesCount;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPageCountLimitReached(): bool
+    {
+        return $this->pageCountLimitReached;
     }
 
     /**

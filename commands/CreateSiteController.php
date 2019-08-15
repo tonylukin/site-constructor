@@ -99,6 +99,9 @@ class CreateSiteController extends Controller
             if ($result) {
                 $this->creatorConfig->removeConfig($config);
             }
+            if ($this->creator->isPageCountLimitReached()) {
+                break;
+            }
         }
 
         $this->creatingProcessManager->setProcessFinished();
