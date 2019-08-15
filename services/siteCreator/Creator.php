@@ -5,6 +5,7 @@ namespace app\services\siteCreator;
 use app\models\Image;
 use app\models\Page;
 use app\models\Site;
+use app\models\SiteSearchWordLog;
 use app\services\googleParser\SiteListGetter;
 use yii\helpers\Inflector;
 
@@ -102,6 +103,17 @@ class Creator
                 throw new \Exception('Error on saving site: ' . \implode('; ', $site->getErrorSummary(true)));
             }
             $this->newSitesCount++;
+        } elseif ($site->search_word !== $query) {
+            $siteSearchWordLog = SiteSearchWordLog::findOne(['search_word' => $query]);
+            if ($siteSearchWordLog === null) {
+                $siteSearchWordLog = new SiteSearchWordLog();
+                $siteSearchWordLog->search_word = $query;
+                $siteSearchWordLog->site_id = $site->id;
+
+                if (!$siteSearchWordLog->save()) {
+                    throw new \Exception('Error on saving site search word log: ' . \implode('; ', $siteSearchWordLog->getErrorSummary(true)));
+                }
+            }
         }
 
         $pages = Page::find()->bySourceUrls($urlList)->indexBy('source_url')->all();

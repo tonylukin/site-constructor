@@ -6,6 +6,7 @@ class CreatorConfig
 {
     private const DEFAULT_FILENAME = 'site-creator.config';
     private const COMMENT_SYMBOL = '#';
+    private const DEFAULT_2ND_LEVEL_DOMAIN = '.wowtoknow.com';
 
     private const RAW_LINE = 'rawLine';
     public const DOMAIN = 'domain';
@@ -37,8 +38,13 @@ class CreatorConfig
             }
 
             $data = \array_map('trim', \explode(',', $line));
-            $domain = $data[0] ?? '';
-            $query = $data[1] ?? '';
+            if (\count($data) === 1) {
+                $query = $data[0];
+                $domain = \preg_replace('/\s+/', '-', $query) . self::DEFAULT_2ND_LEVEL_DOMAIN;
+            } else {
+                $domain = $data[0] ?? '';
+                $query = $data[1] ?? '';
+            }
             if (!$domain || !$query) {
                 $this->removeConfig([self::RAW_LINE => $line]);
                 continue;
