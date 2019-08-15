@@ -74,7 +74,7 @@ class CreatorConfig
         $contents = \file_get_contents($filePath);
         $contents = \str_replace($line, '', $contents);
         \file_put_contents($filePath, $contents);
-        \file_put_contents("{$filePath}.bak", $line . PHP_EOL, FILE_APPEND);
+        \file_put_contents("{$filePath}.bak", $line, FILE_APPEND);
     }
 
     /**

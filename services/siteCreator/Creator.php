@@ -64,7 +64,7 @@ class Creator
     /**
      * @param string $domain
      * @param string $query
-     * @return bool
+     * @return bool Whether site creation fully completed
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function create(string $domain, string $query): bool
