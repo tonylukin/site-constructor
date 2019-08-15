@@ -73,15 +73,15 @@ class CreateSiteController extends Controller
             return ExitCode::OK;
         }
 
-        $this->creatingProcessManager->setProcessStarted();
-        if ($urlCount !== null) {
-            $this->siteListGetter->setSearchResultNumber($urlCount);
-        }
-
         $configs = $this->creatorConfig->getConfigs();
         if (empty($configs)) {
             $this->writeLog('Config is empty');
             return ExitCode::OK;
+        }
+
+        $this->creatingProcessManager->setProcessStarted();
+        if ($urlCount !== null) {
+            $this->siteListGetter->setSearchResultNumber($urlCount);
         }
 
         $this->writeLog('Process started with config count ' . \count($configs));
