@@ -80,6 +80,7 @@ class Creator
      */
     public function create(string $domain, string $query): bool
     {
+        \Yii::warning('Start method: ' . __METHOD__, Parser::LOGGER_PREFIX);
         $this->domain = $domain;
         $fullUrlList = $this->siteListGetter->getSearchList($query);
         if (empty($fullUrlList)) {

@@ -54,6 +54,7 @@ class SiteListGetter
      */
     public function getSearchList(string $queryWords, int $currentPage = 1): array
     {
+        \Yii::warning('Start method: ' . __METHOD__, Parser::LOGGER_PREFIX);
         $siteUrlsList = \Yii::$app->cache->get($this->getResultsCacheKey($queryWords));
         if ($siteUrlsList !== false) {
             \Yii::warning("Get url list from cache for '{$queryWords}'", Parser::LOGGER_PREFIX);
@@ -81,6 +82,7 @@ class SiteListGetter
             \Yii::error("No links found for '{$googleUrl}'", Parser::LOGGER_PREFIX);
             return [];
         }
+        \Yii::warning('Search results found count: ' . \count($urlResults[0]), Parser::LOGGER_PREFIX);
 
         $siteUrlsList = [];
         foreach ($urlResults[0] as $urlResult) {
@@ -110,6 +112,7 @@ class SiteListGetter
             return $siteUrlsList;
         }
 
+        \Yii::warning('Request delay', Parser::LOGGER_PREFIX);
         \sleep(self::REQUEST_DELAY);
         $siteUrlsList = \array_merge(
             $siteUrlsList,

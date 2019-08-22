@@ -87,7 +87,9 @@ class CreateSiteController extends Controller
         $this->writeLog('Process started with config count ' . \count($configs));
         foreach ($configs as $config) {
             try {
+                $this->writeLog('Run config: ' . \implode(' : ', $config));
                 $result = $this->creator->create($config[CreatorConfig::DOMAIN], $config[CreatorConfig::SEARCH_QUERY]);
+                $this->writeLog('Finish config: ' . \implode(' : ', $config));
 
             } catch (\Throwable $e) {
                 $this->creatingProcessManager->setProcessFinished();
