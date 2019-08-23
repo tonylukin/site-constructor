@@ -125,7 +125,7 @@ class Creator
                 return false;
             }
 
-            if (!\Yii::$app->cache->set($this->getPositionCacheKey(), $positionStart + $i)) {
+            if (!\Yii::$app->cache->set($this->getPositionCacheKey(), $positionStart + $i + 1)) {
                 \Yii::warning("Could not save position: {$i}", Parser::LOGGER_PREFIX);
             }
             \Yii::warning("Processing url: '{$url}' in set: #{$i}", Parser::LOGGER_PREFIX);
