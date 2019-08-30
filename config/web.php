@@ -19,6 +19,11 @@ $config = [
         '@views' => '@app/views',
         '@webroot' => '@app/web',
     ],
+    'modules' => [
+        'admin' => [
+            'class' => \app\modules\admin\Module::class,
+        ]
+    ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -56,6 +61,8 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'admin' => 'admin/site/index',
+                'admin/<controller>/<action>' => 'admin/<controller>/<action>',
                 '<url:.*>' => 'page/index'
             ],
         ],
