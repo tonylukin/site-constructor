@@ -8,7 +8,7 @@ class CreatorConfig
     private const COMMENT_SYMBOL = '#';
     private const DEFAULT_2ND_LEVEL_DOMAIN = '.wowtoknow.com';
 
-    private const RAW_LINE = 'rawLine';
+    public const RAW_LINE = 'rawLine';
     public const DOMAIN = 'domain';
     public const SEARCH_QUERY = 'searchQuery';
 
@@ -18,14 +18,22 @@ class CreatorConfig
     private $filename = self::DEFAULT_FILENAME;
 
     /**
+     * @return string
+     */
+    public function getFilePath(): string
+    {
+        return \implode(DIRECTORY_SEPARATOR, [
+            \Yii::$app->runtimePath,
+            $this->filename,
+        ]);
+    }
+
+    /**
      * @return array
      */
     public function getConfigs(): array
     {
-        $filePath = \implode(DIRECTORY_SEPARATOR, [
-            \Yii::$app->runtimePath,
-            $this->filename
-        ]);
+        $filePath = $this->getFilePath();
         $lines = \file($filePath);
         if ($lines === false) {
             return [];

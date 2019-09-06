@@ -17,6 +17,7 @@ use yii\db\ActiveRecord;
  * @property string $created_at
  *
  * @property Page[] $pages
+ * @property SiteSearchWordLog[] $siteSearchWordLogs
  */
 class Site extends ActiveRecord
 {
@@ -68,7 +69,7 @@ class Site extends ActiveRecord
         return [
             [['search_word', 'domain'], 'unique'],
             [['search_word', 'domain'], 'required'],
-            [['created_at'], 'safe'],
+            [['created_at', 'body_class', 'slug'], 'safe'],
             [['search_word', 'domain'], 'string', 'max' => 255],
         ];
     }
@@ -125,5 +126,21 @@ class Site extends ActiveRecord
     public function setBodyClass(): void
     {
         $this->body_class = self::BODY_CLASSES[\array_rand(self::BODY_CLASSES)];
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getSiteSearchWordLogs(): ActiveQuery
+    {
+        return $this->hasMany(SiteSearchWordLog::class, ['site_id' => 'id']);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getBodyClasses(): array
+    {
+        return \array_combine(self::BODY_CLASSES, self::BODY_CLASSES);
     }
 }

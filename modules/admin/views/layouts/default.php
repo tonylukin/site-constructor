@@ -39,6 +39,7 @@ AdminAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Sites', 'url' => ['/admin/site/index']],
+            ['label' => 'Queue', 'url' => ['/admin/creation-queue/index']],
             ['label' => 'Logout', 'url' => ['/admin/login/logout']],
         ],
     ]);

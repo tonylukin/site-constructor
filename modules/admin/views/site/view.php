@@ -1,12 +1,14 @@
 <?php
 
+use app\models\Site;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Site */
 
-$this->title = $model->id;
+$this->title = $model->domain;
 $this->params['breadcrumbs'][] = ['label' => 'Sites', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -35,6 +37,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'body_class',
             'slug',
             'created_at',
+            [
+                'attribute' => 'Search words',
+                'format' => 'html',
+                'value' => function (Site $model) {
+                    return \implode(
+                        '<br>',
+                        ArrayHelper::getColumn($model->siteSearchWordLogs, 'search_word')
+                    );
+                },
+            ],
         ],
     ]) ?>
 

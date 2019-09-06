@@ -1,5 +1,6 @@
 <?php
 
+use yii\grid\ActionColumn;
 use app\models\Site;
 use yii\grid\Column;
 use yii\helpers\ArrayHelper;
@@ -39,9 +40,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->getPages()->count();
                 },
             ],
+            [
+                'attribute' => 'Search words',
+                'format' => 'html',
+                'value' => function (Site $model) {
+                    return \implode(
+                        '<br>',
+                        ArrayHelper::getColumn($model->siteSearchWordLogs, 'search_word')
+                    );
+                },
+            ],
             'created_at:date',
 
-//            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => ActionColumn::class, 'template' => '{view} {update}'],
         ],
     ]); ?>
 
