@@ -17,7 +17,8 @@ class SiteListGetter
         'tripadvisor.com',
         'youtube.com',
         'studfiles.net',
-        'amazon.co.uk'
+        'amazon.co.uk',
+        'wikipedia.org',
     ];
 
     /**

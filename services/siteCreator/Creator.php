@@ -12,6 +12,7 @@ use yii\helpers\Inflector;
 class Creator
 {
     private const MAX_PAGES_PER_EXEC = 50;
+    private const MAX_CONTENT_LENGTH = 100000;
 
     /**
      * @var SiteListGetter
@@ -144,6 +145,7 @@ class Creator
                     \Yii::warning("Skip site '{$url}'", Parser::LOGGER_PREFIX);
                     continue;
                 }
+                $content = \mb_substr($content, 0, self::MAX_CONTENT_LENGTH);
 
                 $page->title = $this->parser->getTitle();
                 $page->keywords = $this->parser->getKeywords();
