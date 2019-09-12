@@ -89,7 +89,7 @@ class CreateSiteController extends Controller
             try {
                 $this->writeLog('Run config: ' . \implode(' : ', $config));
                 $result = $this->creator->create($config[CreatorConfig::DOMAIN], $config[CreatorConfig::SEARCH_QUERY]);
-                $this->writeLog('Finish config: ' . \implode(' : ', $config));
+                $this->writeLog('Finish config: ' . $config[CreatorConfig::DOMAIN] . ' : \'' . $config[CreatorConfig::SEARCH_QUERY] . '\'');
 
             } catch (\Throwable $e) {
                 $this->creatingProcessManager->setProcessFinished();
