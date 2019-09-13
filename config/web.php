@@ -63,6 +63,7 @@ $config = [
             'rules' => [
                 'admin' => 'admin/site/index',
                 'admin/<controller>/<action>' => 'admin/<controller>/<action>',
+                'sitemap.xml' => 'page/sitemap',
                 '<url:.*>' => 'page/index'
             ],
         ],

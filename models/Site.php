@@ -69,6 +69,7 @@ class Site extends ActiveRecord
         return [
             [['search_word', 'domain'], 'unique'],
             [['search_word', 'domain'], 'required'],
+            [['domain'], 'filter', 'filter' => 'trim'],
             [['created_at', 'body_class', 'slug'], 'safe'],
             [['search_word', 'domain'], 'string', 'max' => 255],
         ];

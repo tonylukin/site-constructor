@@ -4,8 +4,10 @@ namespace app\controllers;
 
 use app\services\siteView\NavigationLinksGetter;
 use app\services\siteView\PageFinder;
+use app\services\siteView\SiteMapGenerator;
 use yii\base\Module;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class PageController extends Controller
 {
@@ -20,6 +22,11 @@ class PageController extends Controller
     private $navigationLinksGetter;
 
     /**
+     * @var SiteMapGenerator
+     */
+    private $siteMapGenerator;
+
+    /**
      * PageController constructor.
      * @param string $id
      * @param Module $module
@@ -32,11 +39,13 @@ class PageController extends Controller
         Module $module,
         array $config = [],
         PageFinder $pageFinder,
-        NavigationLinksGetter $navigationLinksGetter
+        NavigationLinksGetter $navigationLinksGetter,
+        SiteMapGenerator $siteMapGenerator
     )
     {
         $this->pageFinder = $pageFinder;
         $this->navigationLinksGetter = $navigationLinksGetter;
+        $this->siteMapGenerator = $siteMapGenerator;
         parent::__construct($id, $module, $config);
     }
 
@@ -57,5 +66,14 @@ class PageController extends Controller
             'page' => $page,
             'navigationLinksGetter' => $this->navigationLinksGetter
         ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function actionSitemap(): string
+    {
+        \Yii::$app->response->format = Response::FORMAT_XML;
+        return \file_get_contents($this->siteMapGenerator->getFileName(\Yii::$app->request->hostName));
     }
 }
