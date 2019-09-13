@@ -40,6 +40,7 @@ AdminAsset::register($this);
         'items' => [
             ['label' => 'Sites', 'url' => ['/admin/site/index']],
             ['label' => 'Queue', 'url' => ['/admin/creation-queue/index']],
+            ['label' => 'Log', 'url' => ['/admin/creation-queue/creation-log-view']],
             ['label' => 'Logout', 'url' => ['/admin/login/logout']],
         ],
     ]);

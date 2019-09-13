@@ -44,4 +44,16 @@ class CreationQueueController extends Controller
             'creatorConfig' => $this->creatorConfig,
         ]);
     }
+
+    /**
+     * @return string
+     */
+    public function actionCreationLogView(): string
+    {
+        \exec('tail -100 /var/log/create-site.log', $lines);
+
+        return $this->render('creation-log-view', [
+            'lines' => $lines,
+        ]);
+    }
 }
