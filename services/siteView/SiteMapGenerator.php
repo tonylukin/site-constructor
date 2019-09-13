@@ -21,6 +21,7 @@ class SiteMapGenerator
 SELECT CONCAT('http://{$site->domain}/', `p`.`url`) AS `loc`, `p`.`publish_date` AS `lastmod`
 FROM `page` `p`
 WHERE `p`.`site_id` = :siteId AND `p`.`publish_date` <= NOW()
+ORDER BY `p`.`publish_date` ASC
 SQL;
             $pageData = \Yii::$app
                 ->db
