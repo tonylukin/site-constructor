@@ -95,7 +95,7 @@ class CreateSiteController extends Controller
                 $this->creatingProcessManager->setProcessFinished();
                 \Yii::error($e->getTraceAsString(), Parser::LOGGER_PREFIX);
                 $this->writeLog("Error: {$e->getMessage()}");
-                return ExitCode::OK;
+                return ExitCode::UNSPECIFIED_ERROR;
             }
 
             if ($result) {

@@ -4,7 +4,7 @@ namespace app\services\siteCreator;
 
 class CreatingProcessManager
 {
-    private const FILE_SECONDS_INTERVAL = 60 * 60 * 12;
+    private const FILE_HOURS_INTERVAL = 3;
     private const PROCESS_NAME = 'create-site';
 
     public function setProcessStarted(): void
@@ -34,7 +34,7 @@ class CreatingProcessManager
             return false;
         }
 
-        if (\time() - \filemtime($filePath) > self::FILE_SECONDS_INTERVAL) {
+        if (\time() - \filemtime($filePath) > (3600 * self::FILE_HOURS_INTERVAL)) {
             $this->setProcessFinished();
             return false;
         }
