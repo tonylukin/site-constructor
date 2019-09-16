@@ -73,7 +73,8 @@ class PageController extends Controller
      */
     public function actionSitemap(): string
     {
-        \Yii::$app->response->format = Response::FORMAT_XML;
+        \Yii::$app->response->format = Response::FORMAT_RAW;
+        \header('Content-Type: text/xml');
         return \file_get_contents($this->siteMapGenerator->getFileName(\Yii::$app->request->hostName));
     }
 }
