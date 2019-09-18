@@ -37,7 +37,7 @@ class Creator
     /**
      * @var int
      */
-    private $updatedPagesCount = 0;
+    private $existingPagesCount = 0;
 
     /**
      * @var int
@@ -134,6 +134,9 @@ class Creator
             $page = $pages[$url] ?? null;
             if ($page === null) {
                 $page = new Page();
+            } else {
+                $this->existingPagesCount++;
+                continue;
             }
             $isNewRecord = $page->isNewRecord;
 
@@ -187,8 +190,6 @@ class Creator
                     }
                     if ($isNewRecord) {
                         $this->newPagesCount++;
-                    } else {
-                        $this->updatedPagesCount++;
                     }
                 } else {
                     \Yii::error(\implode('; ', $page->getErrorSummary(true)), Parser::LOGGER_PREFIX);
@@ -236,9 +237,9 @@ class Creator
     /**
      * @return int
      */
-    public function getUpdatedPagesCount(): int
+    public function getExistingPagesCount(): int
     {
-        return $this->updatedPagesCount;
+        return $this->existingPagesCount;
     }
 
     /**

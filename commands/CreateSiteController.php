@@ -107,7 +107,7 @@ class CreateSiteController extends Controller
         }
 
         $this->creatingProcessManager->setProcessFinished();
-        $this->writeLog("New sites: {$this->creator->getNewSitesCount()}, new pages: {$this->creator->getNewPagesCount()}, updated pages: {$this->creator->getUpdatedPagesCount()}, new images: {$this->creator->getImagesSavedCount()}");
+        $this->writeLog("New sites: {$this->creator->getNewSitesCount()}, new pages: {$this->creator->getNewPagesCount()}, existing pages: {$this->creator->getExistingPagesCount()}, new images: {$this->creator->getImagesSavedCount()}");
         return ExitCode::OK;
     }
 }
