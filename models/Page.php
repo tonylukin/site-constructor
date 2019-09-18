@@ -104,9 +104,15 @@ class Page extends ActiveRecord
      */
     public function getPrevPage(): ?self
     {
+        $site = Site::getCurrentSite();
+        if ($site === null) {
+            return  null;
+        }
+
         $query = self::find()
             ->andWhere('id < :id', [':id' => $this->id])
             ->andWhere('publish_date <= NOW()')
+            ->andWhere(['site_id' => $site->id])
             ->limit(1)
         ;
         if (!YII_DEBUG) {
@@ -120,9 +126,15 @@ class Page extends ActiveRecord
      */
     public function getNextPage(): ?self
     {
+        $site = Site::getCurrentSite();
+        if ($site === null) {
+            return  null;
+        }
+
         $query = self::find()
             ->andWhere('id > :id', [':id' => $this->id])
             ->andWhere('publish_date <= NOW()')
+            ->andWhere(['site_id' => $site->id])
             ->limit(1)
         ;
         if (!YII_DEBUG) {
