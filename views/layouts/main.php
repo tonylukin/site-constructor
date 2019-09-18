@@ -183,7 +183,7 @@ $site = \app\models\Site::getCurrentSite();
             src='/buzznews/js/jquery.js?ver=1.12.4-wp'></script>
     <script type='text/javascript'
             src='/buzznews/js/jquery-migrate.min.js?ver=1.4.1'></script>
-    <link rel="canonical" href="<?= \Yii::$app->request->hostName ?>">
+    <link rel="canonical" href="<?= \Yii::$app->request->url ?>">
     <style type="text/css">
         .site-title a,
         .site-description {
