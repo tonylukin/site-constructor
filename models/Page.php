@@ -145,8 +145,10 @@ class Page extends ActiveRecord
             return false;
         }
 
-        $days = \round($this->pageIndex / 3, 0, PHP_ROUND_HALF_DOWN) * \random_int(1, 2);
-        $this->publish_date = (new \DateTime())->modify("+ {$days} days")->format('Y-m-d');
+        if (!$this->publish_date) {
+            $days = \round($this->pageIndex / 3, 0, PHP_ROUND_HALF_DOWN) * \random_int(1, 2);
+            $this->publish_date = (new \DateTime())->modify("+ {$days} days")->format('Y-m-d');
+        }
         return true;
     }
 }
