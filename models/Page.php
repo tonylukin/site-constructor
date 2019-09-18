@@ -106,6 +106,7 @@ class Page extends ActiveRecord
     {
         $query = self::find()
             ->andWhere('id < :id', [':id' => $this->id])
+            ->andWhere('publish_date <= NOW()')
             ->limit(1)
         ;
         if (!YII_DEBUG) {
@@ -121,6 +122,7 @@ class Page extends ActiveRecord
     {
         $query = self::find()
             ->andWhere('id > :id', [':id' => $this->id])
+            ->andWhere('publish_date <= NOW()')
             ->limit(1)
         ;
         if (!YII_DEBUG) {
