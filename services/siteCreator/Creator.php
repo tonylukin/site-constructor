@@ -11,7 +11,7 @@ use yii\helpers\Inflector;
 
 class Creator
 {
-    private const MAX_PAGES_PER_EXEC = 50;
+    private const MAX_PAGES_PER_EXEC = 100;
     private const MAX_CONTENT_LENGTH = 100000;
 
     /**

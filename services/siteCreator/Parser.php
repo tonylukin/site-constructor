@@ -8,7 +8,7 @@ use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 
 class Parser
 {
-    private const CONTENT_MIN_LENGTH = 500;
+    private const CONTENT_MIN_LENGTH = 1000;
     public const LOGGER_PREFIX = 'parser';
 
     /**
