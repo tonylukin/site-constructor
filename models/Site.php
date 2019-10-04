@@ -2,9 +2,11 @@
 
 namespace app\models;
 
+use app\models\queries\PageQuery;
 use app\models\queries\SiteQuery;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "site".
@@ -89,9 +91,9 @@ class Site extends ActiveRecord
     }
 
     /**
-     * @return ActiveQuery
+     * @return PageQuery
      */
-    public function getPages()
+    public function getPages(): PageQuery
     {
         return $this->hasMany(Page::class, ['site_id' => 'id']);
     }
@@ -143,5 +145,13 @@ class Site extends ActiveRecord
     public static function getBodyClasses(): array
     {
         return \array_combine(self::BODY_CLASSES, self::BODY_CLASSES);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getOptions(): array
+    {
+        return ArrayHelper::map(self::find()->all(), 'id', 'domain');
     }
 }

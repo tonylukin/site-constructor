@@ -30,14 +30,21 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'search_word',
-            'domain',
+            [
+                'class' => \yii\grid\DataColumn::class,
+                'attribute' => 'domain',
+                'format' => function (string $value) {
+                    return "<a href='//{$value}' target='_blank'>{$value}</a>";
+                },
+            ],
 //            'body_class',
 //            'slug',
             [
                 'class' => Column::class,
                 'header' => 'Page count',
                 'content' => function (Site $model, $key, $index, $column) {
-                    return $model->getPages()->count();
+                    return $model->getPages()->published()->count()
+                        . Html::tag('b', ' [' . $model->getPages()->count() . ']');
                 },
             ],
             [

@@ -51,9 +51,16 @@ class CreationQueueController extends Controller
     public function actionCreationLogView(): string
     {
         \exec('tail -100 /var/log/create-site.log', $lines);
+        $logPath = \implode(DIRECTORY_SEPARATOR, [
+            \Yii::$app->runtimePath,
+            'logs',
+            'app.log'
+        ]);
+        \exec("tail -1000 {$logPath}", $linesYiiLog);
 
         return $this->render('creation-log-view', [
             'lines' => $lines,
+            'linesYiiLog' => $linesYiiLog,
         ]);
     }
 }
