@@ -37,8 +37,8 @@ class PageLink extends \yii\db\ActiveRecord
             [['page_id'], 'required'],
             [['created_at'], 'safe'],
             [['text', 'url'], 'string', 'max' => 255],
-            [['page_id'], 'exist', 'skipOnError' => true, 'targetClass' => Page::className(), 'targetAttribute' => ['page_id' => 'id']],
-            [['ref_page_id'], 'exist', 'skipOnError' => true, 'targetClass' => Page::className(), 'targetAttribute' => ['ref_page_id' => 'id']],
+            [['page_id'], 'exist', 'skipOnError' => true, 'targetClass' => Page::class, 'targetAttribute' => ['page_id' => 'id']],
+            [['ref_page_id'], 'exist', 'skipOnError' => true, 'targetClass' => Page::class, 'targetAttribute' => ['ref_page_id' => 'id']],
         ];
     }
 

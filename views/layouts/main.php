@@ -216,6 +216,17 @@ $site = \app\models\Site::getCurrentSite();
                 </div>
             </div>
             <!--HERE GOOGLE ADS-->
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- header -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8283920148845070"
+                 data-ad-slot="9259775717"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </header>
         <?php /*
         <div class="sb-mobile-menu">
@@ -308,6 +319,17 @@ $site = \app\models\Site::getCurrentSite();
                                             <?= $content ?>
 
                                             <!--HERE GOOGLE ADS-->
+                                            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                                            <!-- under article -->
+                                            <ins class="adsbygoogle"
+                                                 style="display:block"
+                                                 data-ad-client="ca-pub-8283920148845070"
+                                                 data-ad-slot="5556334425"
+                                                 data-ad-format="auto"
+                                                 data-full-width-responsive="true"></ins>
+                                            <script>
+                                                 (adsbygoogle = window.adsbygoogle || []).push({});
+                                            </script>
                                         </div>
                                     </div>
                                 </div>
@@ -321,12 +343,12 @@ $site = \app\models\Site::getCurrentSite();
                     </aside><!-- #secondary -->
                 </div>
             </div>
-            <div class="content-area container">
-                <?= \app\widgets\RelatedPostsWidget::widget() ?>
-            </div>
             <section class="widget widget_media_image">
                 <!--HERE GOOGLE ADS-->
             </section>
+            <div class="content-area container">
+                <?= \app\widgets\RelatedPostsWidget::widget() ?>
+            </div>
         </div>
 
         <footer id="colophon" class="site-footer sb-bottom-footer">

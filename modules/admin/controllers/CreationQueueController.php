@@ -56,7 +56,8 @@ class CreationQueueController extends Controller
             'logs',
             'app.log'
         ]);
-        \exec("tail -1000 {$logPath}", $linesYiiLog);
+        $year = \date('Y');
+        \exec("tail -1000 {$logPath} | grep \"^{$year}\-\"", $linesYiiLog);
 
         return $this->render('creation-log-view', [
             'lines' => $lines,
