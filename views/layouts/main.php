@@ -19,6 +19,7 @@ $site = \app\models\Site::getCurrentSite();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="<?= $this->params['description'] ?? '' ?>">
     <meta name="keywords" content="<?= $this->params['keywords'] ?? '' ?>">
+    <?= $this->render('@views/includes/adsense') ?>
 
     <script type="text/javascript">
         window._wpemojiSettings = {
