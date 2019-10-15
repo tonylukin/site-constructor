@@ -165,9 +165,8 @@ class Page extends ActiveRecord
         }
 
         if (!$this->publish_date) {
-            $lastPublishDate = self::getLastPublishDate($this->site_id);
             $days = \round($this->pageIndex / 3, 0, PHP_ROUND_HALF_DOWN) * \random_int(1, 2);
-            $this->publish_date = (new \DateTime($lastPublishDate ?? 'now'))
+            $this->publish_date = (new \DateTime())
                 ->modify("+ {$days} days")
                 ->format('Y-m-d')
             ;
