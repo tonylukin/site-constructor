@@ -153,6 +153,11 @@ class Page extends ActiveRecord
         return $this;
     }
 
+    /**
+     * @param bool $insert
+     * @return bool
+     * @throws \Exception
+     */
     public function beforeSave($insert): bool
     {
         if (!parent::beforeSave($insert)) {
@@ -160,9 +165,33 @@ class Page extends ActiveRecord
         }
 
         if (!$this->publish_date) {
+            $lastPublishDate = self::getLastPublishDate($this->site_id);
             $days = \round($this->pageIndex / 3, 0, PHP_ROUND_HALF_DOWN) * \random_int(1, 2);
-            $this->publish_date = (new \DateTime())->modify("+ {$days} days")->format('Y-m-d');
+            $this->publish_date = (new \DateTime($lastPublishDate ?? 'now'))
+                ->modify("+ {$days} days")
+                ->format('Y-m-d')
+            ;
         }
         return true;
+    }
+
+    /**
+     * @param int|null $siteId
+     * @return string|null
+     * @throws \yii\db\Exception
+     */
+    public static function getLastPublishDate(?int $siteId): ?string
+    {
+        if ($siteId === null) {
+            return null;
+        }
+
+        $sql = <<<SQL
+SELECT MAX(publish_date) FROM page
+GROUP BY site_id
+HAVING site_id = :siteId
+SQL;
+        $date = \Yii::$app->db->createCommand($sql, ['siteId' => $siteId])->queryScalar();
+        return $date === false ? null : $date;
     }
 }
