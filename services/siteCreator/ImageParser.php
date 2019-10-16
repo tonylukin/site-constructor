@@ -127,6 +127,7 @@ class ImageParser
         // first try to get image from raw image url
         $image = null;
         $imageUrl = \htmlspecialchars_decode($imageUrl);
+        $imageUrl = $this->absoluteImageUrl($imageUrl, $url);
         try {
             $image = $this->createFromSource($imageUrl);
 
