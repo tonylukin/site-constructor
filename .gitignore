@@ -38,3 +38,5 @@ tests/_support/_generated
 /yii
 
 /web/ads.txt
+/config/_adsenseSites.php
+/config/_googleAnalyticsCodes.php

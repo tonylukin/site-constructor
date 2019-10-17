@@ -218,17 +218,19 @@ $site = \app\models\Site::getCurrentSite();
                 </div>
             </div>
             <!--HERE GOOGLE ADS-->
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <!-- header -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-8283920148845070"
-                 data-ad-slot="9259775717"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+            <?php if (\in_array(\Yii::$app->request->hostName, \Yii::$app->params['adsenseSites'], true)) { ?>
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- header -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-8283920148845070"
+                     data-ad-slot="9259775717"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            <?php } ?>
         </header>
         <?php /*
         <div class="sb-mobile-menu">
@@ -321,17 +323,20 @@ $site = \app\models\Site::getCurrentSite();
                                             <?= $content ?>
 
                                             <!--HERE GOOGLE ADS-->
-                                            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                                            <!-- under article -->
-                                            <ins class="adsbygoogle"
-                                                 style="display:block"
-                                                 data-ad-client="ca-pub-8283920148845070"
-                                                 data-ad-slot="5556334425"
-                                                 data-ad-format="auto"
-                                                 data-full-width-responsive="true"></ins>
-                                            <script>
-                                                 (adsbygoogle = window.adsbygoogle || []).push({});
-                                            </script>
+                                            <?php if (\in_array(\Yii::$app->request->hostName, \Yii::$app->params['adsenseSites'], true)) { ?>
+                                                <script async
+                                                        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                                                <!-- under article -->
+                                                <ins class="adsbygoogle"
+                                                     style="display:block"
+                                                     data-ad-client="ca-pub-8283920148845070"
+                                                     data-ad-slot="5556334425"
+                                                     data-ad-format="auto"
+                                                     data-full-width-responsive="true"></ins>
+                                                <script>
+                                                    (adsbygoogle = window.adsbygoogle || []).push({});
+                                                </script>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
