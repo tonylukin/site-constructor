@@ -9,6 +9,7 @@ class SiteListGetter
 {
     private const REQUEST_DELAY = 10;
     private const GOOGLE_URL = 'https://www.google.co.uk/search?q={query}&num={number}&start={start}';
+    private const GOOGLE_SERP_LINKS_PATTERN = '/<div class=\"kCrYT\">([\s\S]*?)\&amp\;/i';
 
     private const SITE_BLACK_LIST = [
         'facebook.com',
@@ -76,8 +77,7 @@ class SiteListGetter
         }
 
         $body = (string)$response->getBody();
-        $urlPattern = '/<div class=\"kCrYT\">([\s\S]*?)\&amp\;/i';
-        \preg_match_all($urlPattern, $body, $urlResults);
+        \preg_match_all(self::GOOGLE_SERP_LINKS_PATTERN, $body, $urlResults);
 
         if (empty($urlResults)) {
             \Yii::error("No links found for '{$googleUrl}'", Parser::LOGGER_PREFIX);
