@@ -47,6 +47,7 @@ $this->params['navLinks'] = $links;
             $indents = \app\services\siteView\TextSplitter::split($page->content);
             echo $indents[0] ?? '';
         ?>
+        <br>
         <?php if (\in_array(\Yii::$app->request->hostName, \Yii::$app->params['adsenseSites'], true)) { ?>
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <ins class="adsbygoogle"
@@ -59,6 +60,7 @@ $this->params['navLinks'] = $links;
                 (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
         <?php } ?>
+        <br>
         <?= $indents[1] ?? '' ?>
     </div>
 
