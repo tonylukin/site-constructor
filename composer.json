@@ -23,7 +23,8 @@
         "guzzlehttp/guzzle": "^6.3",
         "creocoder/yii2-flysystem": "^0.9.3",
         "yiisoft/yii2-imagine": "^2.2",
-        "ext-simplexml": "*"
+        "ext-simplexml": "*",
+        "kartik-v/yii2-widget-select2": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

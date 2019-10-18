@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\Html;
 
 /**
  * This is the model class for table "page_link".
@@ -80,5 +81,19 @@ class PageLink extends \yii\db\ActiveRecord
     public static function find()
     {
         return new \app\models\queries\PageLinkQuery(static::class);
+    }
+
+    /**
+     * @return string
+     */
+    public function getLink(): string
+    {
+        if ($this->ref_page_id === null) {
+            return Html::a($this->text ?: $this->url, $this->url);
+        }
+
+        $url = 'http://' . $this->refPage->site->domain . '/' . $this->refPage->url;
+        $text = ($this->text ?: $this->refPage->title) ?: $url;
+        return Html::a($text, $url);
     }
 }

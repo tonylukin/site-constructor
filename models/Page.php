@@ -22,6 +22,7 @@ use yii\db\ActiveRecord;
  *
  * @property Site $site
  * @property Image[] $images
+ * @property PageLink[] $pageLinks
  */
 class Page extends ActiveRecord
 {
@@ -31,6 +32,11 @@ class Page extends ActiveRecord
      * @var int
      */
     private $pageIndex = 0;
+
+    /**
+     * @var array
+     */
+    public $links = [];
 
     /**
      * {@inheritdoc}
@@ -50,7 +56,7 @@ class Page extends ActiveRecord
             [['source_url'], 'unique'],
             [['content'], 'string'],
             [['site_id'], 'integer'],
-            [['created_at', 'publish_date'], 'safe'],
+            [['created_at', 'publish_date', 'links'], 'safe'],
             [['title', 'keywords', 'description'], 'string', 'max' => 255],
             [['site_id'], 'exist', 'skipOnError' => true, 'targetClass' => Site::className(), 'targetAttribute' => ['site_id' => 'id']],
         ];
@@ -171,7 +177,60 @@ class Page extends ActiveRecord
                 ->format('Y-m-d')
             ;
         }
+
         return true;
+    }
+
+    /**
+     * @param bool $insert
+     * @param array $changedAttributes
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        foreach ($this->links as $link) {
+            if (\is_numeric($link)) {
+                if ($this->isNewRecord
+                    || PageLink::findOne(['page_id' => $this->id, 'ref_page_id' => $link]) === null) {
+                    $pageLink = new PageLink();
+                    $pageLink->page_id = $this->id;
+                    $pageLink->ref_page_id = $link;
+                    $pageLink->save();
+                }
+            } elseif ($this->isNewRecord
+                || PageLink::findOne(['page_id' => $this->id, 'url' => $link]) === null) {
+                $pageLink = new PageLink();
+                $pageLink->page_id = $this->id;
+                $pageLink->url = $link;
+                $pageLink->save();
+            }
+        }
+
+        parent::afterSave($insert, $changedAttributes);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getPageLinks(): ActiveQuery
+    {
+        return $this->hasMany(PageLink::class, ['page_id' => 'id']);
+    }
+
+    /**
+     * Load each page by it's link. Only used for admin panel
+     * @return self
+     */
+    public function loadLinks(): self
+    {
+        $this->links = [];
+        foreach ($this->pageLinks as $pageLink) {
+            if ($pageLink->ref_page_id !== null) {
+                $this->links[] = $pageLink->ref_page_id;
+            } else {
+                $this->links[] = $pageLink->url;
+            }
+        }
+        return $this;
     }
 
     /**

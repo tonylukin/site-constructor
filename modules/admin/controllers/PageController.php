@@ -8,8 +8,10 @@ use app\modules\admin\models\PagesFilterForm;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * PageController implements the CRUD actions for Page model.
@@ -108,6 +110,8 @@ class PageController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -117,16 +121,33 @@ class PageController extends Controller
     }
 
     /**
+     * @param string $q
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function actionPagesList(string $q)
+    {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $sql = <<<SQL
+SELECT id, title AS text FROM page WHERE title LIKE :q LIMIT 1000;
+SQL;
+        $data = \Yii::$app->db->createCommand($sql, ['q' => "%{$q}%"])->queryAll();
+
+        return ['results' => \array_values($data)];
+    }
+
+    /**
      * Finds the Page model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
      * @return Page the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($id): Page
     {
-        if (($model = Page::findOne($id)) !== null) {
-            return $model;
+        if (($model = Page::find()->with('pageLinks')->where(['id' => $id])->one()) !== null) {
+            return $model->loadLinks();
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');

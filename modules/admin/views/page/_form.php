@@ -26,6 +26,29 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'publish_date')->textInput() ?>
 
+    <fieldset>
+        <?= $form->field($model, 'links')->widget(
+            \kartik\select2\Select2::class,
+            [
+//                'data' => $model->links,
+                'value' => $model->links,
+                'pluginOptions' => [
+                    'allowClear' => true,
+                    'tags' => true,
+                    'minimumInputLength' => 3,
+                    'ajax' => [
+                        'url' => \yii\helpers\Url::to(['pages-list']),
+                        'dataType' => 'json',
+                        'data' => new \yii\web\JsExpression('function(params) { return {q:params.term}; }'),
+                    ],
+                ],
+                'options' => [
+                    'multiple' => true,
+                ]
+            ]
+        ) ?>
+    </fieldset>
+
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>

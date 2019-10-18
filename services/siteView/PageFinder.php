@@ -15,7 +15,7 @@ class PageFinder
     public function findByUrl(string $url): ?Page
     {
         $query = Page::find()
-            ->with('images', 'site')
+            ->with('images', 'site', 'pageLinks', 'pageLinks.refPage', 'pageLinks.refPage.site')
             ->published()
             ->byHost()
         ;
