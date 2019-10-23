@@ -49,9 +49,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'created_at:date',
             'publish_date:date',
 
-            ['class' => ActionColumn::class],
+            ['class' => ActionColumn::class, 'template' => '{view} {update}'],
         ],
-    ]); ?>
+        'rowOptions' => function(\app\models\Page $model, $key, $index, $grid) {
+            return $model->active ? [] : ['class' => 'danger'];
+        }
+    ]) ?>
 
     <?php Pjax::end(); ?>
 

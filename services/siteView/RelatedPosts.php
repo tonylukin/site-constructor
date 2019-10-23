@@ -39,6 +39,7 @@ class RelatedPosts
         $query = Page::find()
             ->with('images')
             ->published()
+            ->active()
             ->byHost()
             ->andWhere(['page.id' => $this->getRelatedIds((int) $page->id)])
             ->orderBy(['page.publish_date' => SORT_DESC])

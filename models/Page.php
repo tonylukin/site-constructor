@@ -19,6 +19,7 @@ use yii\db\ActiveRecord;
  * @property int $site_id
  * @property string $created_at
  * @property string $publish_date
+ * @property int $active
  *
  * @property Site $site
  * @property Image[] $images
@@ -58,7 +59,8 @@ class Page extends ActiveRecord
             [['site_id'], 'integer'],
             [['created_at', 'publish_date', 'links'], 'safe'],
             [['title', 'keywords', 'description'], 'string', 'max' => 255],
-            [['site_id'], 'exist', 'skipOnError' => true, 'targetClass' => Site::className(), 'targetAttribute' => ['site_id' => 'id']],
+            [['site_id'], 'exist', 'skipOnError' => true, 'targetClass' => Site::class, 'targetAttribute' => ['site_id' => 'id']],
+            ['active', 'in', 'range' => [0, 1]],
         ];
     }
 
@@ -187,21 +189,23 @@ class Page extends ActiveRecord
      */
     public function afterSave($insert, $changedAttributes)
     {
-        foreach ($this->links as $link) {
-            if (\is_numeric($link)) {
-                if ($this->isNewRecord
-                    || PageLink::findOne(['page_id' => $this->id, 'ref_page_id' => $link]) === null) {
+        if (\is_array($this->links)) {
+            foreach ($this->links as $link) {
+                if (\is_numeric($link)) {
+                    if ($this->isNewRecord
+                        || PageLink::findOne(['page_id' => $this->id, 'ref_page_id' => $link]) === null) {
+                        $pageLink = new PageLink();
+                        $pageLink->page_id = $this->id;
+                        $pageLink->ref_page_id = $link;
+                        $pageLink->save();
+                    }
+                } elseif ($this->isNewRecord
+                    || PageLink::findOne(['page_id' => $this->id, 'url' => $link]) === null) {
                     $pageLink = new PageLink();
                     $pageLink->page_id = $this->id;
-                    $pageLink->ref_page_id = $link;
+                    $pageLink->url = $link;
                     $pageLink->save();
                 }
-            } elseif ($this->isNewRecord
-                || PageLink::findOne(['page_id' => $this->id, 'url' => $link]) === null) {
-                $pageLink = new PageLink();
-                $pageLink->page_id = $this->id;
-                $pageLink->url = $link;
-                $pageLink->save();
             }
         }
 

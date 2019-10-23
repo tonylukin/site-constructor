@@ -49,6 +49,8 @@ use yii\widgets\ActiveForm;
         ) ?>
     </fieldset>
 
+    <?= $form->field($model, 'active')->checkbox() ?>
+
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>

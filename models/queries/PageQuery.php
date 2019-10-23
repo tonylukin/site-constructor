@@ -14,6 +14,14 @@ use yii\db\Expression;
 class PageQuery extends ActiveQuery
 {
     /**
+     * @return $this
+     */
+    public function active(): self
+    {
+        return $this->andWhere('page.active = 1');
+    }
+
+    /**
      * @return PageQuery
      */
     public function published(): self

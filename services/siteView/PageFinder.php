@@ -17,6 +17,7 @@ class PageFinder
         $query = Page::find()
             ->with('images', 'site', 'pageLinks', 'pageLinks.refPage', 'pageLinks.refPage.site')
             ->published()
+            ->active()
             ->byHost()
         ;
         if ($url === '') {

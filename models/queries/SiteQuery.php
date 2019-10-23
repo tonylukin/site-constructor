@@ -13,6 +13,14 @@ use yii\db\ActiveQuery;
 class SiteQuery extends ActiveQuery
 {
     /**
+     * @return $this
+     */
+    public function active(): self
+    {
+        return $this->andWhere('page.active = 1');
+    }
+
+    /**
      * @param string $searchWord
      * @param string $domain
      * @return SiteQuery
