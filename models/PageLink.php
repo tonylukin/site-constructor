@@ -94,6 +94,6 @@ class PageLink extends \yii\db\ActiveRecord
 
         $url = 'http://' . $this->refPage->site->domain . '/' . $this->refPage->url;
         $text = ($this->text ?: $this->refPage->title) ?: $url;
-        return Html::a($text, $url);
+        return Html::a($text, $url, ['target' => '_blank']);
     }
 }

@@ -48,9 +48,6 @@ $this->params['navLinks'] = $links;
             echo $indents[0] ?? '';
         ?>
         <br>
-        <?php foreach ($page->pageLinks as $pageLink) { ?>
-            <p><?= $pageLink->getLink() ?></p>
-        <?php } ?>
         <?php if (\in_array(\Yii::$app->request->hostName, \Yii::$app->params['adsenseSites'], true)) { ?>
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <ins class="adsbygoogle"
@@ -64,6 +61,14 @@ $this->params['navLinks'] = $links;
             </script>
         <?php } ?>
         <br>
+        <?php if (\count($page->pageLinks) > 0) { ?>
+            <ul>
+                <?php foreach ($page->pageLinks as $pageLink) { ?>
+                    <li><?= $pageLink->getLink() ?></li>
+                <?php } ?>
+            </ul>
+        <?php } ?>
+
         <?= $indents[1] ?? '' ?>
     </div>
 
