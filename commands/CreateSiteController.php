@@ -95,7 +95,8 @@ class CreateSiteController extends Controller
                 $this->creatingProcessManager->setProcessFinished();
                 \Yii::error($e->getTraceAsString(), Parser::LOGGER_PREFIX);
                 $this->writeLog("Error: {$e->getMessage()}");
-                return ExitCode::UNSPECIFIED_ERROR;
+                $this->writeLog("New sites: {$this->creator->getNewSitesCount()}, new pages: {$this->creator->getNewPagesCount()}, existing pages: {$this->creator->getExistingPagesCount()}, new images: {$this->creator->getImagesSavedCount()}");
+                return ExitCode::OK;
             }
 
             if ($result) {

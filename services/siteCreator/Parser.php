@@ -9,6 +9,7 @@ use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 class Parser
 {
     private const CONTENT_MIN_LENGTH = 1000;
+    private const DELETE_SELECTOR = 'form, ul, aside, header, footer, script, noscript, nav';
     public const LOGGER_PREFIX = 'parser';
 
     /**
@@ -76,15 +77,15 @@ class Parser
 
         $dom = new Dom();
         $dom->load($body);
-        /** @var Dom\HtmlNode $domBody */
-        $domBody = $dom->find('body')[0];
-        if ($domBody === null) {
-            \Yii::error('DOM body is null', self::LOGGER_PREFIX);
+        $domContent = $this->findContentElement($dom);
+        if ($domContent === null) {
+            \Yii::error('DOM content is null', self::LOGGER_PREFIX);
             return null;
         }
+        $domContent->find(self::DELETE_SELECTOR)->delete();
 
         try {
-            $html = $domBody->innerHtml();
+            $html = $domContent->innerHtml();
         } catch (UnknownChildTypeException $e) {
             \Yii::error("UnknownChildTypeException: {$e->getMessage()}", self::LOGGER_PREFIX);
             return null;
@@ -94,7 +95,7 @@ class Parser
         $domTitle = $dom->find('head title')[0];
         $this->title = $domTitle !== null ? $domTitle->text() : '';
 
-        $this->imageParser->parse($domBody, $url);
+        $this->imageParser->parse($domContent, $url);
 
         /** @var Dom\HtmlNode $domDescription */
         $domDescription = $dom->find('meta[name="description"]')[0];
@@ -148,5 +149,34 @@ class Parser
     public function getImageParser(): ImageParser
     {
         return $this->imageParser;
+    }
+
+    /**
+     * @param Dom $dom
+     * @return Dom\HtmlNode|null
+     */
+    private function findContentElement(\PHPHtmlParser\Dom $dom): ?Dom\HtmlNode
+    {
+        $content = $dom->find('article')[0];
+        if ($content !== null) {
+            return $content;
+        }
+
+        $content = $dom->find('#content')[0];
+        if ($content !== null) {
+            return $content;
+        }
+
+        $content = $dom->find('.content')[0];
+        if ($content !== null) {
+            return $content;
+        }
+
+        $content = $dom->find('main')[0];
+        if ($content !== null) {
+            return $content;
+        }
+
+        return $dom->find('body')[0];
     }
 }
