@@ -44,24 +44,4 @@ class CreationQueueController extends Controller
             'creatorConfig' => $this->creatorConfig,
         ]);
     }
-
-    /**
-     * @return string
-     */
-    public function actionCreationLogView(): string
-    {
-        \exec('tail -100 /var/log/create-site.log', $lines);
-        $logPath = \implode(DIRECTORY_SEPARATOR, [
-            \Yii::$app->runtimePath,
-            'logs',
-            'app.log'
-        ]);
-        $year = \date('Y');
-        \exec("tail -1000 {$logPath} | grep \"^{$year}\-\"", $linesYiiLog);
-
-        return $this->render('creation-log-view', [
-            'lines' => $lines,
-            'linesYiiLog' => $linesYiiLog,
-        ]);
-    }
 }

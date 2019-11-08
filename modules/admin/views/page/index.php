@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'rowOptions' => function(\app\models\Page $model, $key, $index, $grid) {
             return $model->active ? [] : ['class' => 'danger'];
-        }
+        },
     ]) ?>
 
     <?php Pjax::end(); ?>

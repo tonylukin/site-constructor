@@ -1,5 +1,6 @@
 <?php
 
+use app\services\googleParser\SearchWordsGenerator;
 use app\services\googleParser\SiteListGetter;
 use app\services\siteCreator\ContentAnalyzer;
 use app\services\siteCreator\CreatingProcessManager;
@@ -49,5 +50,8 @@ return [
     ],
     SiteMapGenerator::class => [
         'class' => SiteMapGenerator::class,
+    ],
+    SearchWordsGenerator::class => [
+        'class' => SearchWordsGenerator::class,
     ],
 ];

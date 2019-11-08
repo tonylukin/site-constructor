@@ -2,6 +2,7 @@
 /**
  * @var array $lines
  * @var array $linesYiiLog
+ * @var array $linesYiiLogNoLinksFound
  */
 
 $this->title = 'Creation log';
@@ -10,6 +11,7 @@ $this->title = 'Creation log';
 <ul class="nav nav-tabs">
     <li role="presentation" class="active"><a data-toggle="tab" href="#parse-log">Parse log</a></li>
     <li role="presentation"><a data-toggle="tab" href="#app-log">Yii app log</a></li>
+    <li role="presentation"><a data-toggle="tab" href="#app-log-no-links">No links found</a></li>
 </ul>
 <br>
 <div class="tab-content">
@@ -25,6 +27,15 @@ $this->title = 'Creation log';
     <div role="tabpanel" class="tab-pane" id="app-log">
         <table class="table table-striped">
             <?php foreach ($linesYiiLog as $line) { ?>
+                <tr>
+                    <td><?= $line ?></td>
+                </tr>
+            <?php } ?>
+        </table>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="app-log-no-links">
+        <table class="table table-striped">
+            <?php foreach ($linesYiiLogNoLinksFound as $line) { ?>
                 <tr>
                     <td><?= $line ?></td>
                 </tr>

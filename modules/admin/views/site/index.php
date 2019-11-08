@@ -61,7 +61,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ['class' => ActionColumn::class, 'template' => '{view} {update}'],
         ],
-    ]); ?>
+        'rowOptions' => function(\app\models\Site $model, $key, $index, $grid) {
+            return $model->getPages()->published()->count() !== $model->getPages()->count() ? [] : ['class' => 'danger'];
+        },
+    ]) ?>
 
     <?php Pjax::end(); ?>
 

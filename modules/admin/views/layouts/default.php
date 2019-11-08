@@ -41,7 +41,8 @@ AdminAsset::register($this);
             ['label' => 'Sites', 'url' => ['/admin/site/index']],
             ['label' => 'Pages', 'url' => ['/admin/page/index']],
             ['label' => 'Queue', 'url' => ['/admin/creation-queue/index']],
-            ['label' => 'Log', 'url' => ['/admin/creation-queue/creation-log-view']],
+            ['label' => 'Generate words', 'url' => ['/admin/generate-words/index']],
+            ['label' => 'Log', 'url' => ['/admin/log/index']],
             ['label' => 'Logout', 'url' => ['/admin/login/logout']],
         ],
     ]);
