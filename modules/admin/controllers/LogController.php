@@ -26,8 +26,11 @@ class LogController extends Controller
         \exec('ps aux | grep create-site', $createSiteProcesses);
         $pids = [];
         foreach ($createSiteProcesses as $createSiteProcess) {
-            \preg_match('/^root\s+(\d+)\s+/', $createSiteProcess, $matches);
-            $pids[] = $matches[1];
+            if (\preg_match('/^[\w\-]+\s+(\d+)\s+/', $createSiteProcess, $matches) === 1) {
+                $pids[] = $matches[1];
+            } else {
+                $pids[] = 0;
+            }
         }
 
         return $this->render('creation-log-view', [
