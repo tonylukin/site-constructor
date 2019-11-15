@@ -8,6 +8,14 @@ use yii\web\HttpException;
 
 class Controller extends \yii\web\Controller
 {
+    /**
+     * @var bool
+     */
+    public $enableCsrfValidation = false;
+
+    /**
+     * @return array
+     */
     public function behaviors(): array
     {
         return [

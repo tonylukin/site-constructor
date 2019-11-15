@@ -27,11 +27,19 @@ class SearchWordsGenerator
      */
     public function generate(string $queryPart, int $count): array
     {
+        $replaceCount = \substr_count($queryPart, '%s');
+
         $searchWords = [];
         foreach (\range(1, $count) as $item) {
-            $searchWords[] = \sprintf($queryPart, $this->faker->realText(10, \random_int(1, 5)));
+            $words = \explode(' ', $this->faker->realText(50, \random_int(1, 5)));
+
+            $replaceArguments = [];
+            foreach (\range(1, $replaceCount) as $item2) {
+                $replaceArguments[] = $words[\array_rand($words)];
+            }
+            $searchWords[] = \sprintf($queryPart, ...$replaceArguments);
         }
 
-        return $searchWords;
+        return \array_unique($searchWords);
     }
 }

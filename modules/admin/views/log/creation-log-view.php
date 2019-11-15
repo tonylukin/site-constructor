@@ -3,6 +3,8 @@
  * @var array $lines
  * @var array $linesYiiLog
  * @var array $linesYiiLogNoLinksFound
+ * @var array $createSiteProcesses
+ * @var array $pids
  */
 
 $this->title = 'Creation log';
@@ -12,6 +14,7 @@ $this->title = 'Creation log';
     <li role="presentation" class="active"><a data-toggle="tab" href="#parse-log">Parse log</a></li>
     <li role="presentation"><a data-toggle="tab" href="#app-log">Yii app log</a></li>
     <li role="presentation"><a data-toggle="tab" href="#app-log-no-links">No links found</a></li>
+    <li role="presentation"><a data-toggle="tab" href="#processes">Create site processes</a></li>
 </ul>
 <br>
 <div class="tab-content">
@@ -41,5 +44,19 @@ $this->title = 'Creation log';
                 </tr>
             <?php } ?>
         </table>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="processes">
+        <form action="" method="post">
+            <table class="table table-striped">
+                <?php foreach ($createSiteProcesses as $i => $line) { ?>
+                    <tr>
+                        <td><?= $line ?></td>
+                        <td>
+                            <button name="pidToKill" type="submit" class="btn btn-danger" value="<?= $pids[$i] ?>">Kill <?= $pids[$i] ?></button>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </table>
+        </form>
     </div>
 </div>

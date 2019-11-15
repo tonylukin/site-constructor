@@ -37,10 +37,15 @@ $sites = \yii\helpers\ArrayHelper::map($sites, 'id', 'domain');
 
 <?php
 $wordsBySiteOutput = '';
+$count = 0;
 foreach ($wordsBySite as $domain => $queryWords) {
     foreach ($queryWords as $queryWord) {
         $wordsBySiteOutput .= "{$domain}, {$queryWord}\n";
+        $count++;
     }
 }
 ?>
-<?= Html::textarea('', $wordsBySiteOutput, ['class' => 'form-control']) ?>
+<div class="alert alert-success">Generated <?= $count ?> items total</div>
+<div class="form-group">
+    <?= Html::textarea('', $wordsBySiteOutput, ['class' => 'form-control', 'rows' => 30]) ?>
+</div>
