@@ -4,6 +4,7 @@ namespace app\services\googleParser;
 
 use app\services\siteCreator\Parser;
 use GuzzleHttp\Client;
+use yii\web\TooManyRequestsHttpException;
 
 class SiteListGetter
 {
@@ -53,6 +54,7 @@ class SiteListGetter
      * @param int $currentPage
      * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws TooManyRequestsHttpException
      */
     public function getSearchList(string $queryWords, int $currentPage = 1): array
     {
@@ -72,6 +74,11 @@ class SiteListGetter
             $response = $this->client->request('GET', $googleUrl);
 
         } catch (\Throwable $e) {
+            if (\strpos($e->getMessage(), '429 Too Many Requests') !== false) {
+                \Yii::error(__METHOD__ . ": Too Many Requests exception: {$e->getMessage()}", Parser::LOGGER_PREFIX);
+                throw new TooManyRequestsHttpException($e->getMessage());
+            }
+
             \Yii::error(__METHOD__ . ": Guzzle exception: {$e->getMessage()}", Parser::LOGGER_PREFIX);
             return [];
         }

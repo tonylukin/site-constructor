@@ -8,6 +8,7 @@ use app\models\Site;
 use app\models\SiteSearchWordLog;
 use app\services\googleParser\SiteListGetter;
 use yii\helpers\Inflector;
+use yii\web\TooManyRequestsHttpException;
 
 class Creator
 {
@@ -83,7 +84,12 @@ class Creator
     {
         \Yii::warning('Start method: ' . __METHOD__, Parser::LOGGER_PREFIX);
         $this->domain = $domain;
-        $fullUrlList = $this->siteListGetter->getSearchList($query);
+        try {
+            $fullUrlList = $this->siteListGetter->getSearchList($query);
+        } catch (TooManyRequestsHttpException $e) {
+            return false;
+        }
+
         if (empty($fullUrlList)) {
             \Yii::warning('No URLs were found', Parser::LOGGER_PREFIX);
             return false;
