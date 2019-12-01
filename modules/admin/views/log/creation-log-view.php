@@ -22,7 +22,7 @@ $this->title = 'Creation log';
         <table class="table table-striped">
             <?php foreach ($lines as $line) { ?>
                 <tr>
-                    <td><?= $line ?></td>
+                    <td><?= \htmlspecialchars($line) ?></td>
                 </tr>
             <?php } ?>
         </table>
@@ -31,7 +31,7 @@ $this->title = 'Creation log';
         <table class="table table-striped">
             <?php foreach ($linesYiiLog as $line) { ?>
                 <tr>
-                    <td><?= $line ?></td>
+                    <td><?= \htmlspecialchars($line) ?></td>
                 </tr>
             <?php } ?>
         </table>
