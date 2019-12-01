@@ -78,17 +78,14 @@ class Creator
      * @param string $domain
      * @param string $query
      * @return bool Whether site creation fully completed
+     * @throws TooManyRequestsHttpException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function create(string $domain, string $query): bool
     {
         \Yii::warning('Start method: ' . __METHOD__, Parser::LOGGER_PREFIX);
         $this->domain = $domain;
-        try {
-            $fullUrlList = $this->siteListGetter->getSearchList($query);
-        } catch (TooManyRequestsHttpException $e) {
-            return false;
-        }
+        $fullUrlList = $this->siteListGetter->getSearchList($query);
 
         if (empty($fullUrlList)) {
             \Yii::warning('No URLs were found', Parser::LOGGER_PREFIX);
