@@ -37,7 +37,7 @@ class SearchWordsGenerator
             foreach (\range(1, $replaceCount) as $item2) {
                 $replaceArguments[] = $words[\array_rand($words)];
             }
-            $searchWords[] = \sprintf($queryPart, ...$replaceArguments);
+            $searchWords[] = \str_replace([',', '"', '\''], '', \sprintf($queryPart, ...$replaceArguments));
         }
 
         return \array_unique($searchWords);

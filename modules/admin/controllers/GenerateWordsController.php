@@ -26,7 +26,10 @@ class GenerateWordsController extends Controller
         parent::__construct($id, $module, $config);
     }
 
-
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function actionIndex(): string
     {
         $result = [];
