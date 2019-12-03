@@ -16,7 +16,8 @@ $(function () {
             $('<a href="#">Show all</a>')
                 .insertAfter($spoiler)
                 .on('click', function () {
-                    $(this).hide().prev().height('auto')
+                    $(this).hide().prev().height('auto');
+                    return false;
                 })
             ;
         }
