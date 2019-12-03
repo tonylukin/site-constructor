@@ -13,6 +13,7 @@ class AdminAsset extends AssetBundle
     public $css = [
     ];
     public $js = [
+        'js/admin/main.js',
     ];
     public $depends = [
         YiiAsset::class,

@@ -50,10 +50,14 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'Search words',
                 'format' => 'html',
-                'value' => function (Site $model) {
-                    return \implode(
-                        '<br>',
-                        ArrayHelper::getColumn($model->siteSearchWordLogs, 'search_word')
+                'value' => static function (Site $model) {
+                    return Html::tag(
+                        'div',
+                        \implode(
+                            '<br>',
+                            ArrayHelper::getColumn($model->siteSearchWordLogs, 'search_word')
+                        ),
+                        ['class' => 'js-spoiler', 'data' => ['shown-rows' => '3']]
                     );
                 },
             ],
