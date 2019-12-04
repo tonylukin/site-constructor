@@ -218,7 +218,7 @@ $site = \app\models\Site::getCurrentSite();
                 </div>
             </div>
             <!--HERE GOOGLE ADS-->
-            <?php if (\in_array(\Yii::$app->request->hostName, \Yii::$app->params['adsenseSites'], true)) { ?>
+            <?php if (!\in_array(\Yii::$app->request->hostName, \Yii::$app->params['adsenseSites'], true)) { ?>
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                 <!-- header -->
                 <ins class="adsbygoogle"
@@ -323,7 +323,7 @@ $site = \app\models\Site::getCurrentSite();
                                             <?= $content ?>
 
                                             <!--HERE GOOGLE ADS-->
-                                            <?php if (\in_array(\Yii::$app->request->hostName, \Yii::$app->params['adsenseSites'], true)) { ?>
+                                            <?php if (!\in_array(\Yii::$app->request->hostName, \Yii::$app->params['adsenseSites'], true)) { ?>
                                                 <script async
                                                         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                                                 <!-- under article -->
