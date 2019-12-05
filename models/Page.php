@@ -121,6 +121,7 @@ class Page extends ActiveRecord
             ->andWhere('id < :id', [':id' => $this->id])
             ->andWhere('publish_date <= NOW()')
             ->andWhere(['site_id' => $site->id])
+            ->orderBy('id DESC')
             ->limit(1)
         ;
         if (!YII_DEBUG) {
