@@ -29,7 +29,6 @@ class LogController extends Controller
         \exec("tail -1000 {$logPath} | grep \"^{$year}\-\"", $linesYiiLog);
         \exec("tail -1000 {$logPath} | grep \"No links found for\"", $linesYiiLogNoLinksFound);
         \exec('ps aux | grep create-site', $createSiteProcesses);
-        $createSiteProcesses = ['sdsds', 'sdsds', 'ooo'];//todo delete
         $pids = [];
         foreach ($createSiteProcesses as $createSiteProcess) {
             if (\preg_match('/^[\w\-]+\s+(\d+)\s+/', $createSiteProcess, $matches) === 1) {
