@@ -15,7 +15,8 @@ class LogController extends Controller
 
             $startMysql = \Yii::$app->request->post('startMysql');
             if ($startMysql !== null) {
-                \exec('service mysql start');
+                \exec('service mysql start', $output);
+                \Yii::warning(\print_r($output, true), 'restart');
             }
         }
 

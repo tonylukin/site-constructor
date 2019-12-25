@@ -139,7 +139,7 @@ class Creator
                 $page = new Page();
             } else {
                 $this->existingPagesCount++;
-//                continue; todo IT IS TEMPORARY!!! I WANT TO UPDATE CONTENT
+                continue; //todo IT IS TEMPORARY!!! I WANT TO UPDATE CONTENT
             }
             $isNewRecord = $page->isNewRecord;
 
