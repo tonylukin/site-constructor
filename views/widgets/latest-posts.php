@@ -43,11 +43,13 @@ if (empty($pages)) {
                                     <div class="col-lg-12 col-md-12 buzznews-matchheight-article">
                                         <div class="middle-bottom-wrapper">
                                             <?php if (!empty($page->images)) { ?>
-                                            <div class="middle-bottom-wrapper-image">
-                                                <img src="<?= $page->images[0]->getSourceUrl() ?>"
-                                                     class="attachment-buzznews-postlist size-buzznews-postlist wp-post-image"
-                                                     alt="<?= $page->title ?>">
-                                            </div>
+                                                <div class="middle-bottom-wrapper-image">
+                                                    <a href="<?= \yii\helpers\Url::to(['page/index', 'url' => $page->url]) ?>">
+                                                        <img src="<?= $page->images[0]->getSourceUrl() ?>"
+                                                             class="attachment-buzznews-postlist size-buzznews-postlist wp-post-image"
+                                                             alt="<?= $page->title ?>">
+                                                    </a>
+                                                </div>
                                             <?php } ?>
                                             <div class="buzznews-article-content">
                                                 <div class="desert-eating">
