@@ -122,6 +122,7 @@ class Creator
         }
 
         $pages = Page::find()->bySourceUrls($urlList)->indexBy('source_url')->all();
+        $i = 0;
         foreach ($urlList as $i => $url) {
             if ($this->pageCount >= self::MAX_PAGES_PER_EXEC) {
                 $this->pageCountLimitReached = true;
