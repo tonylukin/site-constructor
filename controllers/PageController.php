@@ -58,7 +58,7 @@ class PageController extends Controller
     {
         $page = $this->pageFinder->findByUrl($url);
         if ($page === null) {
-            throw new NotFoundHttpException("Page '{$url}' not found");
+            throw new NotFoundHttpException("Page '{$url}' not found for host: " . \Yii::$app->request->hostName);
         }
         \Yii::$app->params['page'] = $page;
 
