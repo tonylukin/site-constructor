@@ -165,3 +165,6 @@ body.lighten {
 body.aired {
     background-image: url("../images/wormz.png");
 }
+.another-content {
+    display: none;
+}

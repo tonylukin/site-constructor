@@ -59,19 +59,26 @@ class Creator
      * @var bool
      */
     private $pageCountLimitReached = false;
+    /**
+     * @var ContentGenerator
+     */
+    private $contentGenerator;
 
     /**
      * Creator constructor.
      * @param SiteListGetter $siteListGetter
      * @param Parser $parser
+     * @param ContentGenerator $contentGenerator
      */
     public function __construct(
         SiteListGetter $siteListGetter,
-        Parser $parser
+        Parser $parser,
+        ContentGenerator $contentGenerator
     )
     {
         $this->siteListGetter = $siteListGetter;
         $this->parser = $parser;
+        $this->contentGenerator = $contentGenerator;
     }
 
     /**
@@ -159,6 +166,7 @@ class Creator
                 $page->description = $this->parser->getDescription();
                 $page->site_id = $site->id;
                 $page->content = $content;
+                $page->seo_content = $this->contentGenerator->generateForPage($page);
                 $page->source_url = $url;
                 $page->url = Inflector::slug($page->title);
                 $page->setPageIndex($i);

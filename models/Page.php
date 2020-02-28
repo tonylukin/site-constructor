@@ -20,6 +20,7 @@ use yii\db\ActiveRecord;
  * @property string $created_at
  * @property string $publish_date
  * @property int $active
+ * @property string $seo_content
  *
  * @property Site $site
  * @property Image[] $images
@@ -55,7 +56,7 @@ class Page extends ActiveRecord
         return [
             [['title', 'content', 'url', 'source_url', 'site_id'], 'required'],
             [['source_url'], 'unique'],
-            [['content'], 'string'],
+            [['content', 'seo_content'], 'string'],
             [['site_id'], 'integer'],
             [['created_at', 'publish_date', 'links'], 'safe'],
             [['title', 'keywords', 'description'], 'string', 'max' => 255],

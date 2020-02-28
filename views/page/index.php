@@ -71,6 +71,9 @@ $this->params['navLinks'] = $links;
 
         <?= $indents[1] ?? '' ?>
     </div>
+    <div class="another-content">
+        <?= $page->seo_content ?>
+    </div>
 
     <nav class="navigation post-navigation" role="navigation">
         <h2 class="screen-reader-text">Post navigation</h2>

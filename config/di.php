@@ -3,6 +3,7 @@
 use app\services\googleParser\SearchWordsGenerator;
 use app\services\googleParser\SiteListGetter;
 use app\services\siteCreator\ContentAnalyzer;
+use app\services\siteCreator\ContentGenerator;
 use app\services\siteCreator\CreatingProcessManager;
 use app\services\siteCreator\Creator;
 use app\services\siteCreator\CreatorConfig;
@@ -54,4 +55,7 @@ return [
     SearchWordsGenerator::class => [
         'class' => SearchWordsGenerator::class,
     ],
+    ContentGenerator::class => [
+        'class' => ContentGenerator::class,
+    ]
 ];

@@ -82,10 +82,24 @@ class Parser
             \Yii::error('DOM content is null', self::LOGGER_PREFIX);
             return null;
         }
-        $domContent->find(self::DELETE_SELECTOR)->delete();
+        $collection = $domContent->find(self::DELETE_SELECTOR);
+        if ($collection->count() > 0) {
+            /** @var Dom\HtmlNode $item */
+            foreach ($collection as $item) {
+                $item->delete();
+            }
+        }
+        // remove links
+        $collection = $domContent->find('a');
+        if ($collection->count() > 0) {
+            foreach ($collection as $item) {
+                $item->setAttribute('href', '#');
+            }
+        }
 
         try {
             $html = $domContent->innerHtml();
+
         } catch (UnknownChildTypeException $e) {
             \Yii::error("UnknownChildTypeException: {$e->getMessage()}", self::LOGGER_PREFIX);
             return null;

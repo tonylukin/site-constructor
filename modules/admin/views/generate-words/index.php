@@ -12,8 +12,8 @@ $sites = \yii\helpers\ArrayHelper::map($sites, 'id', 'domain');
 
 <h1><?= $this->title ?></h1>
 
+<?= Html::beginForm() ?>
 <div class="form-group">
-    <?= Html::beginForm() ?>
 
     <div class="form-group">
         <div class="row">
@@ -32,20 +32,28 @@ $sites = \yii\helpers\ArrayHelper::map($sites, 'id', 'domain');
     </div>
 
     <?= Html::submitButton('Generate', ['class' => 'btn btn-primary']) ?>
-    <?= Html::endForm() ?>
 </div>
 
 <?php
-$wordsBySiteOutput = '';
+$wordsBySiteOutput = [];
 $count = 0;
 foreach ($wordsBySite as $domain => $queryWords) {
     foreach ($queryWords as $queryWord) {
-        $wordsBySiteOutput .= "{$domain}, {$queryWord}\n";
+        $wordsBySiteOutput[] = "{$domain}, {$queryWord}";
         $count++;
     }
 }
 ?>
 <div class="alert alert-success">Generated <?= $count ?> items total</div>
+<?php if (!empty($wordsBySiteOutput)) { ?>
+    <div class="form-group">
+        <?= Html::submitButton('Add all to queue', [
+            'class' => 'btn btn-success',
+            'name' => 'addToQueue',
+        ]) ?>
+    </div>
+<?php } ?>
 <div class="form-group">
-    <?= Html::textarea('', $wordsBySiteOutput, ['class' => 'form-control', 'rows' => 30]) ?>
+    <?= Html::textarea('words', \implode("\n", $wordsBySiteOutput), ['class' => 'form-control', 'rows' => 30]) ?>
 </div>
+<?= Html::endForm() ?>
