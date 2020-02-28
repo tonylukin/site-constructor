@@ -51,7 +51,7 @@ SQL;
                     $row['title'],
                     $row['keywords'],
                     $row['description'],
-                    $row['content'],
+                    \substr($row['content'], 0, 10000),
                 ]));
                 $paramName = ":content_{$row['id']}";
                 $sqlInsert .= <<<SQL
