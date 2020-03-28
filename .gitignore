@@ -35,7 +35,6 @@ tests/_support/_generated
 /config/db.php
 
 /web/index.php
-/yii
 
 /web/ads.txt
 /config/_adsenseSites.php

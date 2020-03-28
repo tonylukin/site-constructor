@@ -14,6 +14,6 @@ class CreatorTest extends \Codeception\Test\Unit
         $siteListGetter->setSearchResultNumber(10);
         /** @var Creator $creator */
         $creator = \Yii::$container->get(Creator::class);
-        $creator->create('beautiful-buildings.loc', 'beautiful buildings');
+        $creator->create('site-constructor.loc', 'beautiful buildings');
     }
 }

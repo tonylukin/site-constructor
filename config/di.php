@@ -57,5 +57,11 @@ return [
     ],
     ContentGenerator::class => [
         'class' => ContentGenerator::class,
-    ]
+    ],
+    \app\services\Statistic\VisitCounter::class => [
+        'class' => \app\services\Statistic\VisitCounter::class,
+    ],
+    \app\services\Statistic\Report::class => [
+        'class' => \app\services\Statistic\Report::class,
+    ],
 ];
