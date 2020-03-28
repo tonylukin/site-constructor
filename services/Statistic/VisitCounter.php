@@ -7,6 +7,12 @@ use app\models\Statistic;
 
 class VisitCounter
 {
+    private const MY_IPS = [
+        '217.150.77.69',
+        '213.138.208.25',
+        '86.102.119.98',
+    ];
+
     /**
      * @param string $host
      * @param string $url
@@ -14,6 +20,10 @@ class VisitCounter
      */
     public function hit(string $host, string $url, string $ip): void
     {
+        if (\in_array($ip, self::MY_IPS, true)) {
+            return;
+        }
+
         $hit = new Statistic([
             'host' => $host,
             'url' => $url,
