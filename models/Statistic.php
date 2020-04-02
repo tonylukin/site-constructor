@@ -12,6 +12,7 @@ use Yii;
  * @property string $url
  * @property string $ip
  * @property string $created_at
+ * @property string $additional_info
  */
 class Statistic extends \yii\db\ActiveRecord
 {
@@ -29,7 +30,7 @@ class Statistic extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['created_at'], 'safe'],
+            [['created_at', 'additional_info'], 'safe'],
             [['host', 'url', 'ip'], 'string', 'max' => 255],
         ];
     }
@@ -55,5 +56,20 @@ class Statistic extends \yii\db\ActiveRecord
     public static function find()
     {
         return new \app\models\queries\StatisticQuery(static::class);
+    }
+
+    public function afterFind()
+    {
+        if ($this->additional_info) {
+            $this->additional_info = \json_decode($this->additional_info, true);
+        }
+
+        parent::afterFind();
+    }
+
+    public function beforeSave($insert)
+    {
+        $this->additional_info = \json_encode($this->additional_info);
+        return parent::beforeSave($insert);
     }
 }

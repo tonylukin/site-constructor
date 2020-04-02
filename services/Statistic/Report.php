@@ -9,6 +9,6 @@ class Report
 {
     public function get()
     {
-        return Statistic::find()->byHost()->all();
+        // TODO delete service
     }
 }

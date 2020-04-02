@@ -17,17 +17,20 @@ class VisitCounter
      * @param string $host
      * @param string $url
      * @param string $ip
+     * @param array $additionalInfo
      */
-    public function hit(string $host, string $url, string $ip): void
+    public function hit(string $host, string $url, string $ip, array $additionalInfo = []): void
     {
         if (\in_array($ip, self::MY_IPS, true)) {
             return;
         }
 
+        // TODO add additional info field
         $hit = new Statistic([
             'host' => $host,
             'url' => $url,
             'ip' => $ip,
+            'additional_info' => $additionalInfo
         ]);
         if (!$hit->save()) {
             \Yii::error('Can not save hit: ' . \print_r($hit->attributes, true));
