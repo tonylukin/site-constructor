@@ -22,6 +22,7 @@ class VisitCounter
         'AhrefsBot',
         'bingbot',
         'Mediapartners-Google',
+        'dotbot',
     ];
 
     /**
