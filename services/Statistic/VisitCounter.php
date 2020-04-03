@@ -17,6 +17,11 @@ class VisitCounter
         'Bytespider',
         'MJ12bot',
         'YandexBot',
+        'AspiegelBot',
+        'Googlebot',
+        'AhrefsBot',
+        'bingbot',
+        'Mediapartners-Google',
     ];
 
     /**
