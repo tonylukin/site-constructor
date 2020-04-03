@@ -39,6 +39,7 @@ AdminAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Sites', 'url' => ['/admin/site/index']],
+            ['label' => 'Statistics', 'url' => ['/admin/statistic/index']],
             ['label' => 'Pages', 'url' => ['/admin/page/index']],
             ['label' => 'Queue', 'url' => ['/admin/creation-queue/index']],
             ['label' => 'Generate words', 'url' => ['/admin/generate-words/index']],

@@ -24,18 +24,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $statisticFilterForm,
         'columns' => [
-//            ['class' => 'yii\grid\SerialColumn'],
             [
                 'class' => \yii\grid\DataColumn::class,
                 'header' => 'Host',
                 'attribute' => 'host',
                 'content' => function (\app\models\Statistic $model, $key, $index, $column) {
-                    return Html::a($model->host, $model->host, ['target' => '_blank']);
+                    return Html::a($model->host, "http://{$model->host}", ['target' => '_blank']);
                 },
                 'filter' => \array_combine($options, $options),
                 'value' => $statisticFilterForm->host,
             ],
-            'url',
+            [
+                'class' => \yii\grid\DataColumn::class,
+//                'header' => 'Url',
+                'attribute' => 'url',
+                'content' => function (\app\models\Statistic $model, $key, $index, $column) {
+                    $url = '/' . ($model->url === '/' ? '' : $model->url);
+                    return Html::a($model->host . $url, "http://{$model->host}{$url}", ['target' => '_blank']);
+                },
+//                'value' => 'url'
+            ],
             'ip',
             [
                 'class' => \yii\grid\DataColumn::class,
@@ -50,7 +58,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             'created_at:date',
-
             [
                 'class' => ActionColumn::class,
                 'template' => '{view}',

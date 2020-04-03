@@ -7,10 +7,16 @@ use app\models\Statistic;
 
 class VisitCounter
 {
-    private const MY_IPS = [
+    private const EXCLUDE_IPS = [
         '217.150.77.69',
         '213.138.208.25',
         '86.102.119.98',
+    ];
+    private const EXCLUDE_USER_AGENTS = [
+        'SemrushBot',
+        'Bytespider',
+        'MJ12bot',
+        'YandexBot',
     ];
 
     /**
@@ -21,11 +27,15 @@ class VisitCounter
      */
     public function hit(string $host, string $url, string $ip, array $additionalInfo = []): void
     {
-        if (\in_array($ip, self::MY_IPS, true)) {
+        if (\in_array($ip, self::EXCLUDE_IPS, true)) {
             return;
         }
 
-        // TODO add additional info field
+        $excludePattern = '/(' . \implode('|', self::EXCLUDE_USER_AGENTS) . ')/';
+        if (\preg_match($excludePattern, \implode(' ', $additionalInfo))) {
+            return;
+        }
+
         $hit = new Statistic([
             'host' => $host,
             'url' => $url,
