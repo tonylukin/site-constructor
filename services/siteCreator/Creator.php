@@ -147,7 +147,7 @@ class Creator
                 $page = new Page();
             } else {
                 $this->existingPagesCount++;
-//                continue; //todo IT IS TEMPORARY!!! I WANT TO UPDATE CONTENT
+                continue;
             }
             $isNewRecord = $page->isNewRecord;
 
@@ -177,6 +177,10 @@ class Creator
             }
 
             $transaction = \Yii::$app->db->beginTransaction();
+            if ($transaction === null) {
+                \Yii::error('Transaction is null', Parser::LOGGER_PREFIX);
+                continue;
+            }
             try {
                 if ($page->save()) {
                     $images = $this->parser->getImageParser()->getImages();
