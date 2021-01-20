@@ -3,6 +3,7 @@
  * @var \app\models\Page $page
  * @var \yii\web\View $this
  * @var \app\services\siteView\NavigationLinksGetter $navigationLinksGetter
+ * @var SAPE_context $sapeContext
  */
 
 $this->title = $page->title;
@@ -45,7 +46,8 @@ $this->params['navLinks'] = $links;
     <div class="entry-content">
         <?php
             $indents = \app\services\siteView\TextSplitter::split($page->content);
-            echo $indents[0] ?? '';
+            $text = $indents[0] ?? '';
+            echo $sapeContext->replace_in_text_segment($text);
         ?>
         <br>
         <?php if (!\in_array(\Yii::$app->request->hostName, \Yii::$app->params['adsenseSites'], true)) { ?>
@@ -69,7 +71,10 @@ $this->params['navLinks'] = $links;
             </ul>
         <?php } ?>
 
-        <?= $indents[1] ?? '' ?>
+        <?php
+            $text = $indents[1] ?? '';
+            echo $sapeContext->replace_in_text_segment($text);
+        ?>
     </div>
     <div class="another-content">
         <?= $page->seo_content ?>

@@ -34,6 +34,10 @@ class CreatorConfig
     public function getConfigs(): array
     {
         $filePath = $this->getFilePath();
+        if (!file_exists($filePath)) {
+            touch($filePath);
+        }
+
         $lines = \file($filePath);
         if ($lines === false) {
             return [];

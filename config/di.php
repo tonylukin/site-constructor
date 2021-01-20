@@ -64,4 +64,7 @@ return [
     \app\services\Statistic\Report::class => [
         'class' => \app\services\Statistic\Report::class,
     ],
+    \app\services\siteView\Sape::class => [
+        'class' => \app\services\siteView\Sape::class,
+    ]
 ];

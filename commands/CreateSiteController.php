@@ -9,7 +9,6 @@ use app\services\siteCreator\CreatorConfig;
 use app\services\siteCreator\Parser;
 use yii\base\Module;
 use yii\console\ExitCode;
-use yii\helpers\Console;
 
 class CreateSiteController extends Controller
 {

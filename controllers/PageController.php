@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\services\siteView\NavigationLinksGetter;
 use app\services\siteView\PageFinder;
+use app\services\siteView\Sape;
 use app\services\siteView\SiteMapGenerator;
 use app\services\Statistic\VisitCounter;
 use yii\base\Module;
@@ -30,17 +31,11 @@ class PageController extends Controller
      * @var VisitCounter
      */
     private $visitCounter;
-
     /**
-     * PageController constructor.
-     * @param string $id
-     * @param Module $module
-     * @param array $config
-     * @param PageFinder $pageFinder
-     * @param NavigationLinksGetter $navigationLinksGetter
-     * @param SiteMapGenerator $siteMapGenerator
-     * @param VisitCounter $visitCounter
+     * @var Sape
      */
+    private $sape;
+
     public function __construct(
         string $id,
         Module $module,
@@ -48,13 +43,15 @@ class PageController extends Controller
         PageFinder $pageFinder,
         NavigationLinksGetter $navigationLinksGetter,
         SiteMapGenerator $siteMapGenerator,
-        VisitCounter $visitCounter
+        VisitCounter $visitCounter,
+        Sape $sape
     )
     {
         $this->pageFinder = $pageFinder;
         $this->navigationLinksGetter = $navigationLinksGetter;
         $this->siteMapGenerator = $siteMapGenerator;
         $this->visitCounter = $visitCounter;
+        $this->sape = $sape;
         parent::__construct($id, $module, $config);
     }
 
@@ -76,7 +73,8 @@ class PageController extends Controller
 
         return $this->render('index', [
             'page' => $page,
-            'navigationLinksGetter' => $this->navigationLinksGetter
+            'navigationLinksGetter' => $this->navigationLinksGetter,
+            'sapeContext' => $this->sape->getInstance(),
         ]);
     }
 
