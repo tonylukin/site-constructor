@@ -6,7 +6,14 @@ namespace app\services\siteView;
 
 class Sape
 {
+    /**
+     * @var \SAPE_context
+     */
     private $sapeContext;
+    /**
+     * @var \SAPE_client
+     */
+    private $sapeClient;
 
     public function __construct()
     {
@@ -17,10 +24,17 @@ class Sape
         require_once(realpath($_SERVER['DOCUMENT_ROOT'].'/'._SAPE_USER.'/sape.php'));
         $this->sapeContext = new \SAPE_context();
         ob_start([&$this->sapeContext,'replace_in_page']);
+
+        $this->sapeClient = new \SAPE_client();
     }
 
-    public function getInstance(): \SAPE_context
+    public function getContextInstance(): \SAPE_context
     {
         return $this->sapeContext;
+    }
+
+    public function getClientInstance(): \SAPE_client
+    {
+        return $this->sapeClient;
     }
 }

@@ -74,7 +74,8 @@ class PageController extends Controller
         return $this->render('index', [
             'page' => $page,
             'navigationLinksGetter' => $this->navigationLinksGetter,
-            'sapeContext' => $this->sape->getInstance(),
+            'sapeClient' => $this->sape->getClientInstance(),
+            'sapeContext' => $this->sape->getContextInstance(),
         ]);
     }
 

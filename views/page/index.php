@@ -4,6 +4,7 @@
  * @var \yii\web\View $this
  * @var \app\services\siteView\NavigationLinksGetter $navigationLinksGetter
  * @var SAPE_context $sapeContext
+ * @var SAPE_client $sapeClient
  */
 
 $this->title = $page->title;
@@ -48,6 +49,11 @@ $this->params['navLinks'] = $links;
             $indents = \app\services\siteView\TextSplitter::split($page->content);
             $text = $indents[0] ?? '';
             echo $sapeContext->replace_in_text_segment($text);
+
+            $links = $sapeClient->return_links();
+            if ($links) {
+                echo "<br>{$links}";
+            }
         ?>
         <br>
         <?php if (!\in_array(\Yii::$app->request->hostName, \Yii::$app->params['adsenseSites'], true)) { ?>
