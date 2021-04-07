@@ -1,6 +1,6 @@
 <?php
 
-namespace app\tests\unit\services\googleParser;
+namespace tests\unit\services\googleParser;
 
 use app\services\googleParser\SearchWordsGenerator;
 
@@ -12,10 +12,10 @@ class SearchWordsGeneratorTest extends \Codeception\Test\Unit
         $searchWordsGenerator = \Yii::$container->get(SearchWordsGenerator::class);
         $data = $searchWordsGenerator->generate('Zombie in Japan %s', 30);
         foreach ($data as $datum) {
-            $this->assertStringStartsWith('Zombie in Japan', $datum);
-            $this->assertNotContains(',', $datum);
-            $this->assertNotContains('"', $datum);
-            $this->assertNotContains('\'', $datum);
+            self::assertStringStartsWith('Zombie in Japan', $datum);
+            self::assertNotContains(',', $datum);
+            self::assertNotContains('"', $datum);
+            self::assertNotContains('\'', $datum);
         }
     }
 }

@@ -18,6 +18,7 @@ use yii\helpers\ArrayHelper;
  * @property string $slug
  * @property string $created_at
  * @property int $active
+ * @property string $target_language
  *
  * @property Page[] $pages
  * @property SiteSearchWordLog[] $siteSearchWordLogs
@@ -73,7 +74,7 @@ class Site extends ActiveRecord
             [['search_word', 'domain'], 'unique'],
             [['search_word', 'domain'], 'required'],
             [['domain'], 'filter', 'filter' => 'trim'],
-            [['created_at', 'body_class', 'slug'], 'safe'],
+            [['created_at', 'body_class', 'slug', 'target_language'], 'safe'],
             [['search_word', 'domain'], 'string', 'max' => 255],
             ['active', 'in', 'range' => [0, 1]],
         ];

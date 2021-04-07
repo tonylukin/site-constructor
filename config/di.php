@@ -61,10 +61,10 @@ return [
     \app\services\Statistic\VisitCounter::class => [
         'class' => \app\services\Statistic\VisitCounter::class,
     ],
-    \app\services\Statistic\Report::class => [
-        'class' => \app\services\Statistic\Report::class,
-    ],
     \app\services\siteView\Sape::class => [
         'class' => \app\services\siteView\Sape::class,
-    ]
+    ],
+    \app\services\Translations\TranslationInterface::class => [
+        'class' => \app\services\Translations\GoogleTranslate::class,
+    ],
 ];

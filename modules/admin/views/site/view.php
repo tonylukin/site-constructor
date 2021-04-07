@@ -37,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'body_class',
             'slug',
             'created_at',
+            'target_language',
             [
                 'attribute' => 'Search words',
                 'format' => 'html',

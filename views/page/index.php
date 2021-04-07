@@ -46,7 +46,7 @@ $this->params['navLinks'] = $links;
 
     <div class="entry-content">
         <?php
-            $indents = \app\services\siteView\TextSplitter::split($page->content);
+            $indents = \app\helpers\TextSplitter::splitByDot($page->content);
             $text = $indents[0] ?? '';
             echo $sapeContext->replace_in_text_segment($text);
 

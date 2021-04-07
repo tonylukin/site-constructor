@@ -2,11 +2,13 @@
 
 namespace app\services\siteCreator;
 
+use app\helpers\TextSplitter;
 use app\models\Image;
 use app\models\Page;
 use app\models\Site;
 use app\models\SiteSearchWordLog;
 use app\services\googleParser\SiteListGetter;
+use app\services\Translations\TranslationInterface;
 use yii\helpers\Inflector;
 use yii\web\TooManyRequestsHttpException;
 
@@ -14,71 +16,31 @@ class Creator
 {
     private const MAX_PAGES_PER_EXEC = 100;
     private const MAX_CONTENT_LENGTH = 100000;
+    private const CONTENT_SOURCE_LANGUAGE = 'en';
 
-    /**
-     * @var SiteListGetter
-     */
-    private $siteListGetter;
+    private SiteListGetter $siteListGetter;
+    private Parser $parser;
+    private int $newSitesCount = 0;
+    private int $newPagesCount = 0;
+    private int $existingPagesCount = 0;
+    private int $imagesSavedCount = 0;
+    private ?string $domain = null;
+    private int $pageCount = 0;
+    private bool $pageCountLimitReached = false;
+    private ContentGenerator $contentGenerator;
+    private TranslationInterface $translation;
 
-    /**
-     * @var Parser
-     */
-    private $parser;
-
-    /**
-     * @var int
-     */
-    private $newSitesCount = 0;
-
-    /**
-     * @var int
-     */
-    private $newPagesCount = 0;
-
-    /**
-     * @var int
-     */
-    private $existingPagesCount = 0;
-
-    /**
-     * @var int
-     */
-    private $imagesSavedCount = 0;
-
-    /**
-     * @var string
-     */
-    private $domain;
-
-    /**
-     * @var int
-     */
-    private $pageCount = 0;
-
-    /**
-     * @var bool
-     */
-    private $pageCountLimitReached = false;
-    /**
-     * @var ContentGenerator
-     */
-    private $contentGenerator;
-
-    /**
-     * Creator constructor.
-     * @param SiteListGetter $siteListGetter
-     * @param Parser $parser
-     * @param ContentGenerator $contentGenerator
-     */
     public function __construct(
         SiteListGetter $siteListGetter,
         Parser $parser,
-        ContentGenerator $contentGenerator
+        ContentGenerator $contentGenerator,
+        TranslationInterface $translation
     )
     {
         $this->siteListGetter = $siteListGetter;
         $this->parser = $parser;
         $this->contentGenerator = $contentGenerator;
+        $this->translation = $translation;
     }
 
     /**
@@ -159,16 +121,41 @@ class Creator
                     \Yii::warning("Skip site '{$url}'", Parser::LOGGER_PREFIX);
                     continue;
                 }
-                $content = \mb_substr($content, 0, self::MAX_CONTENT_LENGTH);
 
+                $content = \mb_substr($content, 0, self::MAX_CONTENT_LENGTH);
                 $page->title = $this->parser->getTitle();
                 $page->keywords = $this->parser->getKeywords();
                 $page->description = $this->parser->getDescription();
+                $translatedTexts = null;
+
+                if ($site->target_language !== null) {
+                    $contentSplitted = TextSplitter::chunkBySize($content, $this->translation->maxTextLength());
+                    $translatedTexts = $this->translation->translate($contentSplitted, self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
+                    if ($translatedTexts !== null) {
+                        $content = implode(' ', $translatedTexts);
+                    }
+
+                    $translation = $this->translation->translate([$page->title], self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
+                    if ($translation !== null) {
+                        $page->title = $translation[0];
+                    }
+                    $translation = $this->translation->translate([$page->keywords], self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
+                    if ($translation !== null) {
+                        $page->keywords = $translation[0];
+                    }
+                    $translation = $this->translation->translate([$page->description], self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
+                    if ($translation !== null) {
+                        $page->description = $translation[0];
+                    }
+                }
+
                 $page->site_id = $site->id;
                 $page->content = $content;
-                $page->seo_content = $this->contentGenerator->generateForPage($page);
+                if ($translatedTexts === null) {
+                    $page->seo_content = $this->contentGenerator->generateForPage($page);
+                }
                 $page->source_url = $url;
-                $page->url = Inflector::slug($page->title);
+                $page->url = Inflector::slug($page->title) . ($translatedTexts === null ? '' : "_{$site->target_language}");
                 $page->setPageIndex($i);
 
             } catch (\Throwable $e) {
