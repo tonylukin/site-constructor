@@ -130,11 +130,14 @@ class Creator
 
                 do {
                     if ($site->target_language !== null) {
+                        \Yii::info("Attempt to translate content to lang '{$site->target_language}'", Parser::LOGGER_PREFIX);
+
                         $contentSplitted = TextSplitter::chunkBySize($content, $this->translation->maxTextLength());
                         $translatedTexts = $this->translation->translate($contentSplitted, self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
                         unset($contentSplitted);
                         if ($translatedTexts !== null) {
                             $content = implode(' ', $translatedTexts);
+                            \Yii::info("Content successfully translated for '{$url}' to lang '{$site->target_language}'", Parser::LOGGER_PREFIX);
                         } else {
                             \Yii::error("Could not translate content for '{$url}'", Parser::LOGGER_PREFIX);
                             break;
