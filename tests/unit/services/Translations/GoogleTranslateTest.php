@@ -21,7 +21,7 @@ class GoogleTranslateTest extends \Codeception\Test\Unit
 
     public function testTranslate(): void
     {
-        $translated = $this->googleTranslate->translate('Hello world', 'en', 'ru');
-        self::assertSame('Привет мир', $translated);
+        $translated = $this->googleTranslate->translate(['Hello world'], 'en', 'ru');
+        self::assertSame('Привет мир', $translated[0]);
     }
 }
