@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => 'Site',
                 'attribute' => 'site_id',
                 'content' => function (\app\models\Page $model, $key, $index, $column) {
-                    return Html::a($model->site->domain, $model->site->domain, ['target' => '_blank']);
+                    return Html::a($model->site->domain, "//{$model->site->domain}", ['target' => '_blank']);
                 },
                 'filter' => $sitesOptions,
                 'value' => $pagesFilterForm->site_id,

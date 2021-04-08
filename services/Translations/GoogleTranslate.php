@@ -13,7 +13,7 @@ class GoogleTranslate implements TranslationInterface
         try {
             return GoogleTranslateForFree::translate($sourceLanguage, $targetLanguage, $text);
         } catch (\Throwable $e) {
-            \Yii::error($e->getTrace());
+            \Yii::error($e->getMessage());
             return null;
         }
     }

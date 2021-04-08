@@ -128,26 +128,32 @@ class Creator
                 $page->description = $this->parser->getDescription();
                 $translatedTexts = null;
 
-                if ($site->target_language !== null) {
-                    $contentSplitted = TextSplitter::chunkBySize($content, $this->translation->maxTextLength());
-                    $translatedTexts = $this->translation->translate($contentSplitted, self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
-                    if ($translatedTexts !== null) {
-                        $content = implode(' ', $translatedTexts);
-                    }
+                do {
+                    if ($site->target_language !== null) {
+                        $contentSplitted = TextSplitter::chunkBySize($content, $this->translation->maxTextLength());
+                        $translatedTexts = $this->translation->translate($contentSplitted, self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
+                        unset($contentSplitted);
+                        if ($translatedTexts !== null) {
+                            $content = implode(' ', $translatedTexts);
+                        } else {
+                            \Yii::error("Could not translate content for '{$url}'", Parser::LOGGER_PREFIX);
+                            break;
+                        }
 
-                    $translation = $this->translation->translate([$page->title], self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
-                    if ($translation !== null) {
-                        $page->title = $translation[0];
+                        $translation = $this->translation->translate([$page->title], self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
+                        if ($translation !== null) {
+                            $page->title = $translation[0];
+                        }
+                        $translation = $this->translation->translate([$page->keywords], self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
+                        if ($translation !== null) {
+                            $page->keywords = $translation[0];
+                        }
+                        $translation = $this->translation->translate([$page->description], self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
+                        if ($translation !== null) {
+                            $page->description = $translation[0];
+                        }
                     }
-                    $translation = $this->translation->translate([$page->keywords], self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
-                    if ($translation !== null) {
-                        $page->keywords = $translation[0];
-                    }
-                    $translation = $this->translation->translate([$page->description], self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
-                    if ($translation !== null) {
-                        $page->description = $translation[0];
-                    }
-                }
+                } while (false);
 
                 $page->site_id = $site->id;
                 $page->content = $content;
