@@ -83,7 +83,7 @@ $this->params['navLinks'] = $links;
         ?>
     </div>
     <div class="another-content">
-        <?= $page->seo_content ?>
+        <?php //echo $page->seo_content ?>
     </div>
 
     <nav class="navigation post-navigation" role="navigation">
