@@ -15,7 +15,7 @@ class m210409_041611_fix_page_collations extends Migration
         $this->execute('ALTER TABLE `page` MODIFY `title` VARCHAR(255) CHARSET utf8mb4 NOT NULL;');
         $this->execute('ALTER TABLE `page` MODIFY `keywords` VARCHAR(255) CHARSET utf8mb4 NULL;');
         $this->execute('ALTER TABLE `page` MODIFY `description` VARCHAR(255) CHARSET utf8mb4 NULL;');
-        $this->execute('ALTER TABLE `page` MODIFY `content` TEXT CHARSET utf8mb4 NOT NULL;');
+        $this->execute('ALTER TABLE `page` MODIFY `content` MEDIUMTEXT CHARSET utf8mb4 NOT NULL;');
     }
 
     /**
