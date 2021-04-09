@@ -16,6 +16,7 @@ class Creator
 {
     private const MAX_PAGES_PER_EXEC = 100;
     private const MAX_CONTENT_LENGTH = 100000;
+    private const MAX_META_LENGTH = 255;
     private const CONTENT_SOURCE_LANGUAGE = 'en';
 
     private SiteListGetter $siteListGetter;
@@ -122,10 +123,10 @@ class Creator
                     continue;
                 }
 
-                $content = \mb_substr($content, 0, self::MAX_CONTENT_LENGTH);
-                $page->title = $this->parser->getTitle();
-                $page->keywords = $this->parser->getKeywords();
-                $page->description = $this->parser->getDescription();
+                $content = mb_substr($content, 0, self::MAX_CONTENT_LENGTH);
+                $page->title = mb_substr($this->parser->getTitle(), 0, self::MAX_META_LENGTH);
+                $page->keywords = mb_substr($this->parser->getKeywords(), 0, self::MAX_META_LENGTH);
+                $page->description = mb_substr($this->parser->getDescription(), 0, self::MAX_META_LENGTH);
                 $translatedTexts = null;
 
                 do {
