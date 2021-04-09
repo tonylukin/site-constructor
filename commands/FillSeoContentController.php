@@ -43,7 +43,7 @@ class FillSeoContentController extends Controller
             WHERE seo_content IS NULL 
             LIMIT {$size} OFFSET {$offset}
 SQL;
-            $data = \YII::$app->db->createCommand($sql)->queryAll();
+            $data = \Yii::$app->db->createCommand($sql)->queryAll();
             $sqlInsert = '';
             $sqlInsertParams = [];
             foreach ($data as $row) {

@@ -17,7 +17,7 @@ class Creator
     private const MAX_PAGES_PER_EXEC = 100;
     private const MAX_CONTENT_LENGTH = 100000;
     private const MAX_META_LENGTH = 255;
-    private const CONTENT_SOURCE_LANGUAGE = 'en';
+    public const CONTENT_SOURCE_LANGUAGE = 'en';
 
     private SiteListGetter $siteListGetter;
     private Parser $parser;
