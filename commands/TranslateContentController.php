@@ -14,6 +14,8 @@ class TranslateContentController extends Controller
     private const BATCH_SIZE = 100;
     private TranslationInterface $translation;
 
+    public ?int $month = null;
+
     public function __construct(
         string $id,
         Module $module,
@@ -24,14 +26,29 @@ class TranslateContentController extends Controller
         $this->translation = $translation;
     }
 
-    public function actionIndex(): int // todo add date param
+    public function options($actionID): array
+    {
+        return array_merge(parent::options($actionID), [
+            'month',
+        ]);
+    }
+
+    public function actionIndex(): int
     {
         $i = 0;
 
         do {
-            $pages = Page::find()
-                ->with('site')
-                ->where('DATE(created_at) >= DATE_SUB(NOW(), INTERVAL 3 MONTH)')
+            $pages = Page::find()->with('site');
+            if ($this->month === null) {
+                $pages->andWhere('DATE(created_at) >= DATE_SUB(NOW(), INTERVAL 3 MONTH)');
+            } else {
+                $pages
+                    ->andWhere('MONTH(created_at) = :month')
+                    ->addParams(['month' => $this->month])
+                ;
+            }
+
+            $pages = $pages
                 ->limit(self::BATCH_SIZE)
                 ->offset(self::BATCH_SIZE * $i)
                 ->orderBy('id DESC')
