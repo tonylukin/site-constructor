@@ -16,6 +16,7 @@ TEXT;
         $chunkSize = 50;
 
         $texts = TextSplitter::chunkBySize($sampleText, $chunkSize);
+        $texts = iterator_to_array($texts);
         $chunksCount = \count($texts);
         $chunksCountExpected = (int) ceil(\strlen($sampleText) / $chunkSize);
         if ($chunksCount > $chunksCountExpected) {

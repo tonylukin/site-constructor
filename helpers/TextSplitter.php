@@ -6,15 +6,13 @@ namespace app\helpers;
 
 class TextSplitter
 {
-    public static function chunkBySize(string $text, int $chunkSize): array
+    public static function chunkBySize(string $text, int $chunkSize): \Generator
     {
-        $chunks = [];
-
         while (\strlen($text) > $chunkSize) {
             // location of last space in the first $chunkSize characters
             $substring = substr($text, 0, $chunkSize);
             // pull from position 0 to $substring position
-            $chunks[] = trim(substr($substring, 0, strrpos($substring, ' ')));
+            yield trim(substr($substring, 0, strrpos($substring, ' ')));
             // $string (haystack) now = haystack with out the first $substring characters
             $text = substr($text, strrpos($substring, ' '));
             // UPDATE (2013 Oct 16) - if remaining string has no spaces AND has a string length
@@ -23,9 +21,8 @@ class TextSplitter
                 break;
             }
         }
-        $chunks[] = trim($text); // final bits o' text
 
-        return $chunks;
+        yield trim($text); // final bits o' text
     }
 
     public static function splitByDot(string $text): array
