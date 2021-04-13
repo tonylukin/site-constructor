@@ -14,7 +14,9 @@ class TranslateContentController extends Controller
     private const BATCH_SIZE = 100;
     private TranslationInterface $translation;
 
+    public ?int $day = null;
     public ?int $month = null;
+    public ?int $siteId = null;
 
     public function __construct(
         string $id,
@@ -29,7 +31,9 @@ class TranslateContentController extends Controller
     public function options($actionID): array
     {
         return array_merge(parent::options($actionID), [
+            'day',
             'month',
+            'siteId',
         ]);
     }
 
@@ -39,12 +43,27 @@ class TranslateContentController extends Controller
 
         do {
             $pages = Page::find()->with('site');
-            if ($this->month === null) {
+            if ($this->month === null && $this->day === null) {
                 $pages->andWhere('DATE(created_at) >= DATE_SUB(NOW(), INTERVAL 3 MONTH)');
-            } else {
+            }
+
+            if ($this->day !== null) {
+                $pages
+                    ->andWhere('DAY(created_at) = :day')
+                    ->addParams(['day' => $this->day])
+                ;
+            }
+            if ($this->month !== null) {
                 $pages
                     ->andWhere('MONTH(created_at) = :month')
                     ->addParams(['month' => $this->month])
+                ;
+            }
+
+            if ($this->siteId !== null) {
+                $pages
+                    ->andWhere('site_id = :siteId')
+                    ->addParams(['siteId' => $this->siteId])
                 ;
             }
 
