@@ -133,10 +133,14 @@ class Creator
                     if ($site->target_language !== null) {
                         \Yii::info("Attempt to translate content to lang '{$site->target_language}'", Parser::LOGGER_PREFIX);
 
-                        $contentSplitted = TextSplitter::chunkBySize($content, $this->translation->maxTextLength());
-                        $translatedTexts = $this->translation->translate($contentSplitted, self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
-                        unset($contentSplitted);
-                        if ($translatedTexts !== null) {
+                        $chunksGenerator = TextSplitter::chunkBySize($content, $this->translation->maxTextLength());
+                        foreach ($chunksGenerator as $contentSplitted) {
+                            $translation = $this->translation->translate([$contentSplitted], self::CONTENT_SOURCE_LANGUAGE, $site->target_language);
+                            if ($translation !== null) {
+                                $translatedTexts[] = $translation[0];
+                            }
+                        }
+                        if (!empty($translatedTexts)) {
                             $content = implode(' ', $translatedTexts);
                             \Yii::info("Content successfully translated for '{$url}' to lang '{$site->target_language}'", Parser::LOGGER_PREFIX);
                         } else {
@@ -161,9 +165,9 @@ class Creator
 
                 $page->site_id = $site->id;
                 $page->content = $content;
-                if ($translatedTexts === null) {
-                    $page->seo_content = $this->contentGenerator->generateForPage($page);
-                }
+//                if ($translatedTexts === null) {
+//                    $page->seo_content = $this->contentGenerator->generateForPage($page);
+//                }
                 $page->source_url = $url;
                 $page->url = Inflector::slug($page->title) . ($translatedTexts === null ? '' : "_{$site->target_language}");
                 $page->setPageIndex($i);

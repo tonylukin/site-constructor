@@ -79,10 +79,15 @@ class TranslateContentController extends Controller
                 }
 
                 try {
-                    $contentSplitted = TextSplitter::chunkBySize($page->content, $this->translation->maxTextLength());
-                    $translatedTexts = $this->translation->translate($contentSplitted, Creator::CONTENT_SOURCE_LANGUAGE, $page->site->target_language);
-                    unset($contentSplitted);
-                    if ($translatedTexts !== null) {
+                    $translatedTexts = [];
+                    $chunksGenerator = TextSplitter::chunkBySize($page->content, $this->translation->maxTextLength());
+                    foreach ($chunksGenerator as $contentSplitted) {
+                        $translation = $this->translation->translate([$contentSplitted], Creator::CONTENT_SOURCE_LANGUAGE, $page->site->target_language);
+                        if ($translation !== null) {
+                            $translatedTexts[] = $translation[0];
+                        }
+                    }
+                    if (!empty($translatedTexts)) {
                         $page->content = implode(' ', $translatedTexts);
                     } else {
                         $this->writeLog("Could not translate content for page #{$page->id}");
