@@ -27,7 +27,7 @@ class TextSplitter
 
     public static function splitByDot(string $text): array
     {
-        $splitPosition = \strpos($text, '.', 200);
+        @$splitPosition = \strpos($text, '.', 200);
         if ($splitPosition === false) {
             return [$text];
         }
