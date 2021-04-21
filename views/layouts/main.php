@@ -12,7 +12,7 @@ $site = \app\models\Site::getCurrentSite();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
+<html lang="<?= $site->target_language ?: Yii::$app->language ?>">
 <head>
     <?= $this->render('@views/includes/analytics') ?>
     <meta charset="<?= Yii::$app->charset ?>">
