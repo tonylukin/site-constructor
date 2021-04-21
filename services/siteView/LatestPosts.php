@@ -15,6 +15,7 @@ class LatestPosts
      */
     public function get(?Page $page = null): array
     {
+        \Yii::$app->db->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
         $query = Page::find()
             ->with('images')
             ->published()
@@ -26,9 +27,9 @@ class LatestPosts
         if ($page !== null) {
             $query->andWhere('page.id != :id', [':id' => $page->id]);
         }
-//        if (!YII_DEBUG) {
-//            $query->cache(self::CACHE_DURATION);
-//        }
+        if (!YII_DEBUG) {
+            $query->cache(self::CACHE_DURATION);
+        }
         return $query->all();
     }
 }

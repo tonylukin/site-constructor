@@ -36,6 +36,7 @@ class RelatedPosts
      */
     public function getByPage(Page $page): array
     {
+        \Yii::$app->db->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
         $query = Page::find()
             ->with('images')
             ->published()
@@ -45,9 +46,9 @@ class RelatedPosts
             ->orderBy(['page.publish_date' => SORT_DESC])
             ->limit(self::POST_COUNT)
         ;
-//        if (!YII_DEBUG) {
-//            $query->cache(self::CACHE_DURATION);
-//        }
+        if (!YII_DEBUG) {
+            $query->cache(self::CACHE_DURATION);
+        }
         return $query->all();
     }
 }
