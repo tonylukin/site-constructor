@@ -36,7 +36,6 @@ class RelatedPosts
      */
     public function getByPage(Page $page): array
     {
-        \Yii::$app->db->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
         $query = Page::find()
             ->with('images')
             ->published()

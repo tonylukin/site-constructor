@@ -62,7 +62,6 @@ class PageController extends Controller
      */
     public function actionIndex(string $url): string
     {
-        \Yii::$app->db->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
         $page = $this->pageFinder->findByUrl($url);
         if ($page === null) {
             throw new NotFoundHttpException("Page '{$url}' not found for host: " . \Yii::$app->request->hostName);
