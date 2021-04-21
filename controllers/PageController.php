@@ -67,9 +67,10 @@ class PageController extends Controller
             throw new NotFoundHttpException("Page '{$url}' not found for host: " . \Yii::$app->request->hostName);
         }
         \Yii::$app->params['page'] = $page;
-        $this->visitCounter->hit(\Yii::$app->request->hostName, $url === '' ? '/' : $url, \Yii::$app->request->userIP, [
-            'userAgent' => \Yii::$app->request->userAgent
-        ]);
+//        $this->visitCounter->hit(\Yii::$app->request->hostName, $url === '' ? '/' : $url, \Yii::$app->request->userIP, [
+//            'userAgent' => \Yii::$app->request->userAgent
+//        ]);
+        \Yii::$app->db->pdo->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 
         return $this->render('index', [
             'page' => $page,
