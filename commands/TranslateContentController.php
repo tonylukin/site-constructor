@@ -44,7 +44,7 @@ class TranslateContentController extends Controller
         do {
             $pages = Page::find()->with('site');
             if ($this->month === null && $this->day === null) {
-                $pages->andWhere('DATE(created_at) >= DATE_SUB(NOW(), INTERVAL 3 MONTH)');
+                $pages->andWhere('DATE(created_at) >= DATE_SUB(NOW(), INTERVAL 6 MONTH)');
             }
 
             if ($this->day !== null) {

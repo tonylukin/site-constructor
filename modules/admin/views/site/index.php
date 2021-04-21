@@ -37,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return "<a href='//{$value}' target='_blank'>{$value}</a>";
                 },
             ],
+            'target_language',
 //            'body_class',
 //            'slug',
             [
