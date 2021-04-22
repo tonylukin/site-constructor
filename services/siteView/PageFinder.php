@@ -25,9 +25,9 @@ class PageFinder
         } else {
             $query->andWhere(['page.url' => $url]);
         }
-        if (!YII_DEBUG) {
-            $query->cache(self::CACHE_DURATION);
-        }
+//        if (!YII_DEBUG) {
+//            $query->cache(self::CACHE_DURATION);
+//        }
         return $query->one();
     }
 }

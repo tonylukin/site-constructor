@@ -45,9 +45,9 @@ class RelatedPosts
             ->orderBy(['page.publish_date' => SORT_DESC])
             ->limit(self::POST_COUNT)
         ;
-        if (!YII_DEBUG) {
-            $query->cache(self::CACHE_DURATION);
-        }
+//        if (!YII_DEBUG) {
+//            $query->cache(self::CACHE_DURATION);
+//        }
         return $query->all();
     }
 }

@@ -125,9 +125,9 @@ class Page extends ActiveRecord
             ->orderBy('id DESC')
             ->limit(1)
         ;
-        if (!YII_DEBUG) {
-            $query->cache(self::CACHE_DURATION);
-        }
+//        if (!YII_DEBUG) {
+//            $query->cache(self::CACHE_DURATION);
+//        }
         return $query->one();
     }
 
@@ -147,9 +147,9 @@ class Page extends ActiveRecord
             ->andWhere(['site_id' => $site->id])
             ->limit(1)
         ;
-        if (!YII_DEBUG) {
-            $query->cache(self::CACHE_DURATION);
-        }
+//        if (!YII_DEBUG) {
+//            $query->cache(self::CACHE_DURATION);
+//        }
         return $query->one();
     }
 
