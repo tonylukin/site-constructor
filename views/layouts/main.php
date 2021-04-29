@@ -364,7 +364,7 @@ $site = \app\models\Site::getCurrentSite();
                 <div class="sb-footer-copyright">
                     <div class="site-info">
                         <a target="_blank" class="right" href="/">
-                            <?= $site->search_word ?> <?= \date('Y') ?>
+                            <?= $site->search_word ?> 2019 &dash; <?= \date('Y') ?>
                         </a>
                     </div>
                 </div>
